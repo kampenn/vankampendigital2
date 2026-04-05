@@ -23,7 +23,7 @@ export default function Hero() {
   return (
     <section ref={heroRef} style={{
       minHeight: '100dvh', position: 'relative', overflow: 'hidden',
-      display: 'flex', alignItems: 'flex-end',
+      display: 'flex', alignItems: 'flex-end', marginTop: '-2px',
       background: 'linear-gradient(135deg,#0B0E1A 0%,#131729 50%,#1C2040 100%)',
     }}>
       {/* BG image */}
