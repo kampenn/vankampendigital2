@@ -88,7 +88,7 @@ export default function ScrollVideo() {
   }, [isMobile])
 
   return (
-    <section ref={sectionRef} style={{ height: '300vh', position: 'relative' }}>
+    <section ref={sectionRef} style={{ height: '300vh', position: 'relative', background: '#0B0E1A' }}>
       <div ref={stickyRef} style={{
         position: 'sticky', top: 0, height: '100dvh',
         overflow: 'hidden', background: '#0B0E1A',
