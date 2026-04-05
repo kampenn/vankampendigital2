@@ -74,7 +74,7 @@ export default function ScrollVideo() {
         onUpdate: (self) => {
           obj.frame = self.progress * (totalFrames - 1)
           render()
-          
+
           if (hintRef.current) {
             const fadeOp = Math.max(0, 1 - self.progress * 8)
             hintRef.current.style.opacity = fadeOp
@@ -88,7 +88,7 @@ export default function ScrollVideo() {
   }, [isMobile])
 
   return (
-    <section ref={sectionRef} style={{ height: '300vh', position: 'relative', background: '#0B0E1A' }}>
+    <section ref={sectionRef} style={{ height: '300vh', position: 'relative' }}>
       <div ref={stickyRef} style={{
         position: 'sticky', top: 0, height: '100dvh',
         overflow: 'hidden', background: '#0B0E1A',
@@ -106,16 +106,21 @@ export default function ScrollVideo() {
           pointerEvents: 'none',
         }} />
 
-        {/* Scroll hint */}
-        <div ref={hintRef} style={{
-          position: 'absolute', bottom: '2.5rem', left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
-          color: '#2F6BFF', fontFamily: 'IBM Plex Mono', fontWeight: 600,
-          fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase',
-          animation: 'float 2.5s ease-in-out infinite',
+        {/* Scroll hint positioning wrapper */}
+        <div style={{
+          position: 'absolute', bottom: '2.5rem', left: 0, right: 0,
+          display: 'flex', justifyContent: 'center', pointerEvents: 'none',
         }}>
-          <ChevronDown size={18} />
-          <span>Scroll</span>
+          {/* Inner animated element */}
+          <div ref={hintRef} style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
+            color: '#2F6BFF', fontFamily: 'IBM Plex Mono', fontWeight: 600,
+            fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase',
+            animation: 'float 2.5s ease-in-out infinite',
+          }}>
+            <ChevronDown size={18} />
+            <span>Scroll</span>
+          </div>
         </div>
       </div>
     </section>
