@@ -1,0 +1,133 @@
+import { useState } from 'react'
+import { ArrowRight, Loader2, Check } from 'lucide-react'
+
+export default function Contact() {
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!email || isSubmitting) return
+
+    setIsSubmitting(true)
+
+    // Gekoppeld aan nick@vankampendigital.nl via Web3Forms
+    const accessKey = "f753bca6-813d-454d-a9e9-95c4dc426ef9" 
+
+    if (!accessKey || accessKey === "JOUW_WEB3FORMS_SLEUTEL_HIER") {
+      alert("Let op: De e-mail server (Web3Forms) is nog niet gekoppeld. Vul je access key in binnen src/components/Contact.jsx!")
+      setIsSubmitting(false)
+      return
+    }
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          email: email,
+          subject: "Nieuwe aanvraag (Informatie / Gesprek / Inzicht)",
+          message: `Nieuw e-mailadres achtergelaten op de website: ${email}`,
+          from_name: "VAN KAMPEN Digital",
+        }),
+      })
+      const result = await response.json()
+      if (result.success) {
+        setSubmitted(true)
+      } else {
+        alert("Er ging iets mis met de e-mail server. Probeer het later opnieuw.")
+      }
+    } catch (error) {
+      alert("Er is een netwerkfout opgetreden bij het versturen.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const gradText = { background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }
+
+  return (
+    <section id="contact" style={{ padding: '7rem 1.5rem', background: '#F6F8FB' }}>
+      <div style={{
+        maxWidth: '720px', margin: '0 auto',
+        background: 'linear-gradient(140deg,#0B0E1A 0%,#1C2040 100%)',
+        borderRadius: '3rem', padding: 'clamp(2.5rem,7vw,5rem)',
+        position: 'relative', overflow: 'hidden',
+      }}>
+        {/* Glow effects */}
+        <div style={{ position: 'absolute', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(47,107,255,0.18),transparent 70%)', bottom: '-120px', right: '-120px', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(124,92,255,0.12),transparent 70%)', top: '-60px', left: '-60px', pointerEvents: 'none' }} />
+
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '1.25rem' }}>
+          <span style={{ width: '24px', height: '2px', background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', display: 'inline-block', borderRadius: '2px' }} />
+          Meer inzicht
+        </div>
+
+        <h2 style={{ color: 'white', fontSize: 'clamp(2rem,5vw,3.5rem)', marginBottom: '1rem', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+          Krijg <span style={gradText}>meer informatie</span>
+        </h2>
+        <p style={{ color: 'rgba(255,255,255,0.45)', marginBottom: '2.5rem', lineHeight: 1.75 }}>
+          Laat uw e-mailadres achter voor meer algemene informatie, het inplannen van een vrijblijvend gesprek, of om simpelweg meer inzicht te krijgen in wat digitalisering u concreet op kan leveren.
+        </p>
+
+        {!submitted ? (
+          <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <input
+                id="contact-input"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="naam@bedrijf.nl"
+                required
+                style={{
+                  flex: 1, padding: '1rem 1.25rem', borderRadius: '100px',
+                  border: '1px solid rgba(47,107,255,0.25)',
+                  background: 'rgba(255,255,255,0.05)', color: 'white',
+                  fontFamily: 'Satoshi', fontSize: '0.95rem', outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                }}
+                onFocus={e => e.target.style.borderColor = '#2F6BFF'}
+                onBlur={e => e.target.style.borderColor = 'rgba(47,107,255,0.25)'}
+              />
+              <button id="contact-submit" type="submit" aria-label="Verstuur e-mailadres voor inzicht" style={{
+                padding: '1rem 1.75rem', borderRadius: '100px', flexShrink: 0,
+                background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', color: 'white',
+                border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                boxShadow: '0 4px 20px rgba(47,107,255,0.4)',
+                transition: 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.3s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(47,107,255,0.55)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(47,107,255,0.4)' }}
+              >
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div style={{
+            padding: '2rem', background: 'rgba(47,107,255,0.1)',
+            borderRadius: '1.5rem', border: '1px solid rgba(47,107,255,0.2)', textAlign: 'center',
+          }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>✓</div>
+            <p style={{ color: 'white', fontWeight: 700, fontSize: '1.1rem' }}>Bedankt! U ontvangt binnenkort meer informatie.</p>
+            <p style={{ color: 'rgba(255,255,255,0.45)', marginTop: '0.5rem', fontSize: '0.9rem' }}>Check uw inbox voor praktijkvoorbeelden.</p>
+          </div>
+        )}
+
+        <div style={{ marginTop: '2rem', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+          {['Meer informatie', 'Vrijblijvend gesprek', 'Meer inzicht'].map(item => (
+            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'rgba(255,255,255,0.35)', fontSize: '0.8rem' }}>
+              <Check size={13} style={{ color: '#2F6BFF' }} />{item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,35 @@
+import { useEffect } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+import Navbar from './components/Navbar'
+import ScrollVideo from './components/ScrollVideo'
+import Hero from './components/Hero'
+import Clients from './components/Clients'
+import Features from './components/Features'
+import Philosophy from './components/Philosophy'
+import Protocol from './components/Protocol'
+import Contact from './components/Contact'
+import Footer from './components/Footer'
+
+gsap.registerPlugin(ScrollTrigger)
+
+export default function App() {
+  useEffect(() => {
+    ScrollTrigger.refresh()
+  }, [])
+
+  return (
+    <>
+      <Navbar />
+      <ScrollVideo />
+      <Hero />
+      <Clients />
+      <Features />
+      <Philosophy />
+      <Protocol />
+      <Contact />
+      <Footer />
+    </>
+  )
+}
