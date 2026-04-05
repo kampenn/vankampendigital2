@@ -77,7 +77,6 @@ export default function ScrollVideo() {
           src={isMobile ? "/video/smooth-video-portrait.mp4" : "/video/smooth-video.mp4"}
           muted
           playsInline
-          autoPlay
           preload="auto"
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
