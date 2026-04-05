@@ -115,8 +115,8 @@ export default function Contact() {
             borderRadius: '1.5rem', border: '1px solid rgba(47,107,255,0.2)', textAlign: 'center',
           }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>✓</div>
-            <p style={{ color: 'white', fontWeight: 700, fontSize: '1.1rem' }}>Bedankt! U ontvangt binnenkort meer informatie.</p>
-            <p style={{ color: 'rgba(255,255,255,0.45)', marginTop: '0.5rem', fontSize: '0.9rem' }}>Check uw inbox voor praktijkvoorbeelden.</p>
+            <p style={{ color: 'white', fontWeight: 700, fontSize: '1.1rem' }}>Bedankt! Uw aanvraag is in goede orde ontvangen.</p>
+            <p style={{ color: 'rgba(255,255,255,0.45)', marginTop: '0.5rem', fontSize: '0.9rem' }}>Wij nemen spoedig contact met u op.</p>
           </div>
         )}
 
