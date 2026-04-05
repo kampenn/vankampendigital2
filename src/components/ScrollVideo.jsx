@@ -11,7 +11,7 @@ export default function ScrollVideo() {
   const canvasRef = useRef(null)
   const hintRef = useRef(null)
   const [isMobile, setIsMobile] = useState(false)
-  const totalFrames = 91
+  const totalFrames = 151
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 1100px)').matches)
@@ -26,11 +26,11 @@ export default function ScrollVideo() {
     const ctx = canvas.getContext('2d')
 
     if (isMobile) {
-      canvas.width = 720
-      canvas.height = 1200 // Approx 16:9 portret voor scaling
+      canvas.width = 1072
+      canvas.height = 1920
     } else {
-      canvas.width = 1280
-      canvas.height = 720
+      canvas.width = 1920
+      canvas.height = 1436
     }
 
     const currentFrame = (index) => {
