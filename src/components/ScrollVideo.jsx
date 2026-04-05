@@ -8,9 +8,10 @@ gsap.registerPlugin(ScrollTrigger)
 export default function ScrollVideo() {
   const sectionRef = useRef(null)
   const stickyRef = useRef(null)
-  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
   const hintRef = useRef(null)
   const [isMobile, setIsMobile] = useState(false)
+  const totalFrames = 91
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 1100px)').matches)
@@ -20,42 +21,70 @@ export default function ScrollVideo() {
   }, [])
 
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
 
-    // Make sure video is loaded before scrubbing
-    const setup = () => {
-      video.pause()
-      const ctx = gsap.context(() => {
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          pin: stickyRef.current,
-          scrub: 0.15, // Gewijzigd van 1 naar 0.15 voor veel 'scherpere' 1-op-1 feedback op scrollen
-          onUpdate: (self) => {
-            if (video.duration && isFinite(video.duration)) {
-              // Clamp tightly to right before the end to prevent white flashing on iOS/Safari
-              const targetTime = video.duration * self.progress
-              video.currentTime = Math.min(targetTime, video.duration - 0.05)
-            }
-            if (hintRef.current) {
-              const fadeOp = Math.max(0, 1 - self.progress * 8)
-              hintRef.current.style.opacity = fadeOp
-              hintRef.current.style.pointerEvents = fadeOp < 0.1 ? 'none' : 'auto'
-            }
-          },
-        })
-      })
-      return () => ctx.revert()
-    }
-
-    if (video.readyState >= 2) {
-      return setup()
+    if (isMobile) {
+      canvas.width = 720
+      canvas.height = 1200 // Approx 16:9 portret voor scaling
     } else {
-      video.addEventListener('loadedmetadata', setup, { once: true })
-      return () => video.removeEventListener('loadedmetadata', setup)
+      canvas.width = 1280
+      canvas.height = 720
     }
+
+    const currentFrame = (index) => {
+      const folder = isMobile ? 'mobile' : 'desktop'
+      return `/frames/${folder}/frame-${String(index + 1).padStart(3, '0')}.jpg`
+    }
+
+    const images = []
+    const obj = { frame: 0 }
+
+    // First frame guarantee
+    const firstImg = new Image()
+    firstImg.src = currentFrame(0)
+    firstImg.onload = () => {
+      ctx.drawImage(firstImg, 0, 0, canvas.width, canvas.height)
+    }
+    images[0] = firstImg
+
+    // Preload
+    for (let i = 1; i < totalFrames; i++) {
+      const img = new Image()
+      img.src = currentFrame(i)
+      images[i] = img
+    }
+
+    const render = () => {
+      const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(obj.frame)))
+      const img = images[frameIndex]
+      if (img && img.complete && img.naturalHeight !== 0) {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+      }
+    }
+
+    const ctxGsap = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: stickyRef.current,
+        scrub: 0.15,
+        onUpdate: (self) => {
+          obj.frame = self.progress * (totalFrames - 1)
+          render()
+          
+          if (hintRef.current) {
+            const fadeOp = Math.max(0, 1 - self.progress * 8)
+            hintRef.current.style.opacity = fadeOp
+            hintRef.current.style.pointerEvents = fadeOp < 0.1 ? 'none' : 'auto'
+          }
+        }
+      })
+    })
+
+    return () => ctxGsap.revert()
   }, [isMobile])
 
   return (
@@ -65,19 +94,8 @@ export default function ScrollVideo() {
         overflow: 'hidden', background: '#0B0E1A',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        {/*
-          ──────────────────────────────────────────────────────────────
-          DROP YOUR VIDEO FILE HERE:
-          Place your video at:  /public/video/hero-video.mp4
-          ──────────────────────────────────────────────────────────────
-        */}
-        <video
-          key={isMobile ? 'mobile' : 'desktop'}
-          ref={videoRef}
-          src={isMobile ? "/video/smooth-video-portrait.mp4" : "/video/smooth-video.mp4"}
-          muted
-          playsInline
-          preload="auto"
+        <canvas
+          ref={canvasRef}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
 
@@ -99,8 +117,6 @@ export default function ScrollVideo() {
           <ChevronDown size={18} />
           <span>Scroll</span>
         </div>
-
-
       </div>
     </section>
   )
