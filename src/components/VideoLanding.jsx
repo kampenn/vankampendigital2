@@ -20,7 +20,10 @@ export default function VideoLanding() {
   }, [isMobile])
 
   return (
-    <section style={{ height: '100dvh', position: 'relative', overflow: 'hidden', background: '#0B0E1A' }}>
+    <section style={{ 
+      height: '100dvh', position: 'relative', overflow: 'hidden', 
+      background: '#000000', display: 'flex', justifyContent: 'center', alignItems: 'center' 
+    }}>
       {/* Desktop Video */}
       <video
         ref={desktopRef}
@@ -29,8 +32,7 @@ export default function VideoLanding() {
         playsInline
         muted
         style={{
-          position: 'absolute', inset: 0,
-          width: '100%', height: '100%', objectFit: 'cover',
+          width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
           display: isMobile ? 'none' : 'block',
         }}
       />
@@ -43,12 +45,11 @@ export default function VideoLanding() {
         playsInline
         muted
         style={{
-          position: 'absolute', inset: 0,
-          width: '100%', height: '100%', objectFit: 'cover',
+          width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
           display: isMobile ? 'block' : 'none',
         }}
       />
-      
+
       {/* Scroll hint bouncing */}
       <div style={{
           position: 'absolute', bottom: '2.5rem', left: 0, right: 0,
@@ -59,9 +60,9 @@ export default function VideoLanding() {
             color: '#2F6BFF', fontFamily: 'IBM Plex Mono', fontWeight: 600,
             fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase',
             animation: 'float 2.5s ease-in-out infinite',
-            textShadow: '0 2px 8px rgba(0,0,0,0.4)'
+            textShadow: '0 2px 8px rgba(0,0,0,0.8)'
           }}>
-            <ChevronDown size={18} style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))' }} />
+            <ChevronDown size={18} style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.8))' }} />
             <span>Scroll</span>
           </div>
       </div>
