@@ -21,7 +21,7 @@ export default function VideoLanding() {
 
   return (
     <section style={{ 
-      height: '100dvh', position: 'relative', overflow: 'hidden', 
+      width: '100%', height: '100dvh', position: 'relative', overflow: 'hidden', 
       background: '#FFFFFF', display: 'flex', justifyContent: 'center', alignItems: 'center' 
     }}>
       {/* Desktop Video */}
@@ -33,6 +33,7 @@ export default function VideoLanding() {
         muted
         style={{
           width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
+          backgroundColor: 'transparent',
           display: isMobile ? 'none' : 'block',
         }}
       />
@@ -46,6 +47,7 @@ export default function VideoLanding() {
         muted
         style={{
           width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
+          backgroundColor: 'transparent',
           display: isMobile ? 'block' : 'none',
         }}
       />
