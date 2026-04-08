@@ -1,17 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ArrowRight } from 'lucide-react'
 
 export default function Hero() {
   const heroRef = useRef(null)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 1100px)').matches)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -30,32 +22,14 @@ export default function Hero() {
 
   return (
     <section ref={heroRef} style={{
-      minHeight: '100dvh', position: 'relative', overflow: 'hidden',
-      display: 'flex', alignItems: 'flex-end', marginTop: '-2px',
+      position: 'relative', overflow: 'hidden',
+      padding: '8rem 2rem 5rem', 
       background: 'linear-gradient(135deg,#0B0E1A 0%,#131729 50%,#1C2040 100%)',
     }}>
-      {/* Background Video natively embedded to guarantee Autoplay */}
-      <div 
-        key={isMobile ? 'mobile' : 'desktop'}
-        style={{ position: 'absolute', inset: 0 }}
-        dangerouslySetInnerHTML={{
-          __html: `
-            <video
-              playsinline
-              autoplay
-              muted
-              loop
-              style="width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.55;"
-            >
-              <source src="${isMobile ? '/digitalportret.mp4' : '/digitallandscape.mp4'}" type="video/mp4" />
-            </video>
-          `
-        }}
-      />
-
+      {/* Dark gradient mapping towards the top so it blends smoothly from the video above */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(to top,#0B0E1A 15%,transparent 65%,rgba(11,14,26,0.1) 100%)',
+        background: 'linear-gradient(to bottom, #0B0E1A 0%, transparent 20%)',
       }} />
 
       {/* Blue glow */}
@@ -66,7 +40,7 @@ export default function Hero() {
         pointerEvents: 'none',
       }} />
 
-      <div style={{ position: 'relative', zIndex: 1, padding: '0 2rem 5rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
         <div className="hero-item" style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
           fontFamily: 'IBM Plex Mono', fontSize: '0.72rem', letterSpacing: '0.12em',
