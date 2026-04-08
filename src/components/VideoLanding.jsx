@@ -22,7 +22,7 @@ export default function VideoLanding() {
   return (
     <section style={{ 
       height: '100dvh', position: 'relative', overflow: 'hidden', 
-      background: '#000000', display: 'flex', justifyContent: 'center', alignItems: 'center' 
+      background: '#FFFFFF', display: 'flex', justifyContent: 'center', alignItems: 'center' 
     }}>
       {/* Desktop Video */}
       <video
@@ -60,9 +60,9 @@ export default function VideoLanding() {
             color: '#2F6BFF', fontFamily: 'IBM Plex Mono', fontWeight: 600,
             fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase',
             animation: 'float 2.5s ease-in-out infinite',
-            textShadow: '0 2px 8px rgba(0,0,0,0.8)'
+            textShadow: '0 4px 15px rgba(47,107,255,0.2)'
           }}>
-            <ChevronDown size={18} style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.8))' }} />
+            <ChevronDown size={18} style={{ filter: 'drop-shadow(0 4px 15px rgba(47,107,255,0.2))' }} />
             <span>Scroll</span>
           </div>
       </div>

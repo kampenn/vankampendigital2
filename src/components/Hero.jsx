@@ -26,12 +26,6 @@ export default function Hero() {
       padding: '8rem 2rem 5rem', 
       background: 'linear-gradient(135deg,#0B0E1A 0%,#131729 50%,#1C2040 100%)',
     }}>
-      {/* Dark gradient mapping towards the top so it blends smoothly from the video above */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to bottom, #0B0E1A 0%, transparent 20%)',
-      }} />
-
       {/* Blue glow */}
       <div style={{
         position: 'absolute', bottom: '5%', left: '0%',
