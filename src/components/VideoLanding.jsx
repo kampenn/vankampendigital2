@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { ChevronDown } from 'lucide-react'
 
 export default function VideoLanding() {
   const [isMobile, setIsMobile] = useState(false)
+  const desktopRef = useRef(null)
+  const mobileRef = useRef(null)
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 1100px)').matches)
@@ -11,10 +13,17 @@ export default function VideoLanding() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  useEffect(() => {
+    // Force native browser play
+    if (desktopRef.current && !isMobile) desktopRef.current.play().catch(e => console.log(e))
+    if (mobileRef.current && isMobile) mobileRef.current.play().catch(e => console.log(e))
+  }, [isMobile])
+
   return (
     <section style={{ height: '100dvh', position: 'relative', overflow: 'hidden', background: '#0B0E1A' }}>
       {/* Desktop Video */}
       <video
+        ref={desktopRef}
         src="/digitallandscape.mp4"
         autoPlay
         playsInline
@@ -28,6 +37,7 @@ export default function VideoLanding() {
 
       {/* Mobile Video */}
       <video
+        ref={mobileRef}
         src="/digitalportret.mp4"
         autoPlay
         playsInline
