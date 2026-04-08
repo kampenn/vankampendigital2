@@ -13,20 +13,29 @@ export default function VideoLanding() {
 
   return (
     <section style={{ height: '100dvh', position: 'relative', overflow: 'hidden', background: '#0B0E1A' }}>
-      <div 
-        key={isMobile ? 'mobile' : 'desktop'}
-        style={{ position: 'absolute', inset: 0 }}
-        dangerouslySetInnerHTML={{
-          __html: `
-            <video
-              playsinline
-              autoplay
-              muted
-              style="width: 100%; height: 100%; object-fit: cover; display: block; opacity: 1;"
-            >
-              <source src="${isMobile ? '/digitalportret.mp4' : '/digitallandscape.mp4'}" type="video/mp4" />
-            </video>
-          `
+      {/* Desktop Video */}
+      <video
+        src="/digitallandscape.mp4"
+        autoPlay
+        playsInline
+        muted
+        style={{
+          position: 'absolute', inset: 0,
+          width: '100%', height: '100%', objectFit: 'cover',
+          display: isMobile ? 'none' : 'block',
+        }}
+      />
+
+      {/* Mobile Video */}
+      <video
+        src="/digitalportret.mp4"
+        autoPlay
+        playsInline
+        muted
+        style={{
+          position: 'absolute', inset: 0,
+          width: '100%', height: '100%', objectFit: 'cover',
+          display: isMobile ? 'block' : 'none',
         }}
       />
       
