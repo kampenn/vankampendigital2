@@ -54,7 +54,9 @@ export default function Hero() {
         <h1 className="hero-item" style={{
           fontSize: 'clamp(3.5rem,9.5vw,8.5rem)',
           fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 700,
-          lineHeight: 1.0, marginBottom: '1.75rem', ...gradText,
+          lineHeight: 1.0, marginBottom: '1.75rem', 
+          paddingBottom: '0.15em', paddingRight: '0.1em', paddingLeft: '0.05em', marginLeft: '-0.05em',
+          ...gradText,
         }}>
           groeien.
         </h1>
