@@ -3,7 +3,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import Navbar from './components/Navbar'
-import ScrollVideo from './components/ScrollVideo'
 import Hero from './components/Hero'
 import Clients from './components/Clients'
 import Features from './components/Features'
@@ -22,7 +21,6 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <ScrollVideo />
       <Hero />
       <Clients />
       <Features />
