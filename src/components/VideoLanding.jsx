@@ -27,7 +27,7 @@ export default function VideoLanding() {
       {/* Desktop Video */}
       <video
         ref={desktopRef}
-        src="/digitallandscape.mp4"
+        src="/digitallandscapev2.mp4"
         autoPlay
         playsInline
         muted
