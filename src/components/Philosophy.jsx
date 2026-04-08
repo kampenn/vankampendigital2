@@ -70,7 +70,7 @@ export default function Philosophy() {
             </p>
           </div>
 
-          <div style={{ position: 'relative', flexShrink: 0 }}>
+          <div style={{ position: 'relative', flexShrink: 0, margin: '0 auto' }}>
             <img 
               src="/nick-thumb.png" 
               alt="Nick van Kampen" 
@@ -78,7 +78,8 @@ export default function Philosophy() {
                 width: '180px', height: '180px', objectFit: 'cover', borderRadius: '50%',
                 border: '1px solid rgba(47,107,255,0.4)',
                 boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
-                filter: 'grayscale(20%) contrast(110%)'
+                filter: 'grayscale(20%) contrast(110%)',
+                display: 'block'
               }}
             />
             <div style={{
