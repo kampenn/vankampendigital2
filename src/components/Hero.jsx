@@ -34,22 +34,28 @@ export default function Hero() {
       display: 'flex', alignItems: 'flex-end', marginTop: '-2px',
       background: 'linear-gradient(135deg,#0B0E1A 0%,#131729 50%,#1C2040 100%)',
     }}>
-      {/* Background Video directly embedded inside the Hero */}
-      <div style={{ position: 'absolute', inset: 0 }}>
-        <video
-          key={isMobile ? 'mobile' : 'desktop'}
-          src={isMobile ? "/digitalportret.mp4" : "/digitallandscape.mp4"}
-          muted
-          playsInline
-          autoPlay
-          loop
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', opacity: 0.35 }}
-        />
-      </div>
+      {/* Background Video natively embedded to guarantee Autoplay */}
+      <div 
+        key={isMobile ? 'mobile' : 'desktop'}
+        style={{ position: 'absolute', inset: 0 }}
+        dangerouslySetInnerHTML={{
+          __html: `
+            <video
+              playsinline
+              autoplay
+              muted
+              loop
+              style="width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.55;"
+            >
+              <source src="${isMobile ? '/digitalportret.mp4' : '/digitallandscape.mp4'}" type="video/mp4" />
+            </video>
+          `
+        }}
+      />
 
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(to top,#0B0E1A 25%,rgba(11,14,26,0.3) 65%,rgba(11,14,26,0.05) 100%)',
+        background: 'linear-gradient(to top,#0B0E1A 15%,transparent 65%,rgba(11,14,26,0.1) 100%)',
       }} />
 
       {/* Blue glow */}
@@ -107,23 +113,6 @@ export default function Hero() {
           >
             Vrijblijvend gesprek <ArrowRight size={18} />
           </a>
-          
-          {/* Trust Badge met foto */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
-            <img 
-              src="/nick-thumb.png" 
-              alt="Nick van Kampen" 
-              style={{
-                width: '48px', height: '48px', objectFit: 'cover', borderRadius: '50%',
-                border: '2px solid rgba(255,255,255,0.1)',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-              }}
-            />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ color: 'white', fontSize: '0.9rem', fontWeight: 700, fontFamily: 'Satoshi' }}>Nick van Kampen</span>
-              <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', fontFamily: 'IBM Plex Mono', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Oprichter</span>
-            </div>
-          </div>
         </div>
 
         <div className="hero-item" style={{ display: 'flex', gap: '2.5rem', marginTop: '4.5rem', flexWrap: 'wrap' }}>

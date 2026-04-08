@@ -58,14 +58,39 @@ export default function Philosophy() {
           De meeste digitalisering is <em style={{ color: 'rgba(255,255,255,0.6)' }}>een doel op zich.</em>
         </p>
 
-        <p className="phil-item" style={{
-          fontSize: 'clamp(2rem,5.5vw,4.5rem)',
-          fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 700,
-          color: 'white', lineHeight: 1.1, marginBottom: '3rem',
-        }}>
-          Wij richten ons op:{' '}
-          <span style={gradText}>kosten besparen</span>, groei en winst verhogen.
-        </p>
+        <div className="phil-item" style={{ display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '3rem' }}>
+          <div style={{ flex: 1, minWidth: '300px' }}>
+            <p style={{
+              fontSize: 'clamp(2rem,5.5vw,4.5rem)',
+              fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 700,
+              color: 'white', lineHeight: 1.1,
+            }}>
+              Wij richten ons op:{' '}
+              <span style={gradText}>kosten besparen</span>, groei en winst verhogen.
+            </p>
+          </div>
+
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <img 
+              src="/nick-thumb.png" 
+              alt="Nick van Kampen" 
+              style={{
+                width: '180px', height: '180px', objectFit: 'cover', borderRadius: '50%',
+                border: '1px solid rgba(47,107,255,0.4)',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+                filter: 'grayscale(20%) contrast(110%)'
+              }}
+            />
+            <div style={{
+              position: 'absolute', bottom: '-10px', left: '50%', transform: 'translateX(-50%)',
+              background: '#2F6BFF', padding: '0.4rem 1.2rem', borderRadius: '100px',
+              color: 'white', fontWeight: 700, fontSize: '0.75rem', fontFamily: 'Satoshi',
+              whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(47,107,255,0.6)'
+            }}>
+              Nick van Kampen, Oprichter
+            </div>
+          </div>
+        </div>
 
         <div className="phil-item" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {[
