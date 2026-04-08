@@ -34,6 +34,7 @@ export default function VideoLanding() {
         style={{
           width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
           backgroundColor: 'transparent',
+          transform: 'scale(1.015)',
           display: isMobile ? 'none' : 'block',
         }}
       />
@@ -48,6 +49,7 @@ export default function VideoLanding() {
         style={{
           width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
           backgroundColor: 'transparent',
+          transform: 'scale(1.015)',
           display: isMobile ? 'block' : 'none',
         }}
       />
