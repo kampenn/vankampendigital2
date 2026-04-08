@@ -22,7 +22,6 @@ export default function VideoLanding() {
               playsinline
               autoplay
               muted
-              loop
               style="width: 100%; height: 100%; object-fit: cover; display: block; opacity: 1;"
             >
               <source src="${isMobile ? '/digitalportret.mp4' : '/digitallandscape.mp4'}" type="video/mp4" />
