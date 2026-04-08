@@ -95,9 +95,9 @@ export default function Philosophy() {
 
         <div className="phil-item" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {[
-            [<BarChart3 size={18} />, 'Analyse eerst'],
+            [<BarChart3 size={18} />, 'Analyse'],
             [<Code size={18} />, 'Realiseren'],
-            [<Check size={18} />, 'Altijd meten'],
+            [<Check size={18} />, 'Meten'],
           ].map(([icon, text]) => (
             <div key={text} style={{
               display: 'flex', alignItems: 'center', gap: '0.7rem',
