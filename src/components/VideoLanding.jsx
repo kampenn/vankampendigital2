@@ -37,11 +37,12 @@ export default function VideoLanding() {
         }}>
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
-            color: 'rgba(255,255,255,0.7)', fontFamily: 'IBM Plex Mono', fontWeight: 600,
+            color: '#2F6BFF', fontFamily: 'IBM Plex Mono', fontWeight: 600,
             fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase',
             animation: 'float 2.5s ease-in-out infinite',
+            textShadow: '0 2px 8px rgba(0,0,0,0.4)'
           }}>
-            <ChevronDown size={18} />
+            <ChevronDown size={18} style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))' }} />
             <span>Scroll</span>
           </div>
       </div>
