@@ -58,6 +58,21 @@ export default function Testimonial() {
           }}>
             Magister
           </div>
+          <a
+            href="https://www.linkedin.com/in/nick-van-kampen/details/recommendations/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: 'IBM Plex Mono', fontSize: '0.65rem', letterSpacing: '0.05em',
+              color: 'rgba(47,107,255,0.6)', textDecoration: 'none',
+              marginTop: '0.4rem',
+              transition: 'color 0.3s ease',
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = '#2F6BFF'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(47,107,255,0.6)'}
+          >
+            Bekijk alle aanbevelingen →
+          </a>
         </div>
       </div>
     </section>
