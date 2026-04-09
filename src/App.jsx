@@ -8,6 +8,8 @@ import Hero from './components/Hero'
 import Clients from './components/Clients'
 import Features from './components/Features'
 import Philosophy from './components/Philosophy'
+import Testimonial from './components/Testimonial'
+import Steps from './components/Steps'
 import Protocol from './components/Protocol'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
@@ -27,6 +29,8 @@ export default function App() {
       <Clients />
       <Features />
       <Philosophy />
+      <Testimonial />
+      <Steps />
       <Protocol />
       <Contact />
       <Footer />
