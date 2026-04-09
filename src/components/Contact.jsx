@@ -63,10 +63,9 @@ export default function Contact() {
         <div style={{ position: 'absolute', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(47,107,255,0.18),transparent 70%)', bottom: '-120px', right: '-120px', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(124,92,255,0.12),transparent 70%)', top: '-60px', left: '-60px', pointerEvents: 'none' }} />
 
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '1.25rem' }}>
-          <span style={{ width: '24px', height: '2px', background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', display: 'inline-block', borderRadius: '2px' }} />
+        <p style={{ fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '1.25rem', fontWeight: 600 }}>
           Meer inzicht
-        </div>
+        </p>
 
         <h2 style={{ color: 'white', fontSize: 'clamp(2rem,5vw,3.5rem)', marginBottom: '1rem', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
           Krijg <span style={gradText}>meer informatie</span>

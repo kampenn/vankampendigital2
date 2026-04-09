@@ -85,7 +85,7 @@ function WaveformSVG() {
 function ProtocolCard({ step, title, desc, bg, Visual }) {
   return (
     <div style={{
-      width: '100%', minHeight: '80vh', borderRadius: '3rem',
+      width: '100%', minHeight: '55vh', borderRadius: '3rem',
       background: bg, padding: 'clamp(2.5rem,5vw,4rem)',
       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
       position: 'relative', overflow: 'hidden',
@@ -97,7 +97,7 @@ function ProtocolCard({ step, title, desc, bg, Visual }) {
         <Visual />
       </div>
 
-      <div style={{ fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.1em', marginBottom: '2rem' }}>
+      <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em', marginBottom: '2rem', fontWeight: 600 }}>
         {step}
       </div>
       <h2 style={{ color: 'white', fontSize: 'clamp(2.5rem,5vw,4rem)', marginBottom: '1.25rem', lineHeight: 1.0, letterSpacing: '-0.02em', maxWidth: '580px' }}>{title}</h2>
@@ -132,10 +132,9 @@ export default function Protocol() {
     <section id="aanpak" style={{ padding: '7rem 1.5rem', background: '#F6F8FB' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'IBM Plex Mono', fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#2F6BFF', marginBottom: '1.25rem' }}>
-            <span style={{ width: '24px', height: '2px', background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', display: 'inline-block', borderRadius: '2px' }} />
+          <p style={{ fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#2F6BFF', marginBottom: '1.25rem', fontWeight: 600 }}>
             Onze aanpak
-          </div>
+          </p>
           <h2 style={{ fontSize: 'clamp(2.5rem,5vw,4rem)', letterSpacing: '-0.03em' }}>
             Van inzicht naar <span style={gradText}>impact</span>
           </h2>

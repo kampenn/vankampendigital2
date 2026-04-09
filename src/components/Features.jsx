@@ -209,10 +209,9 @@ export default function Features() {
     <section id="diensten" ref={ref} style={{ padding: '7rem 1.5rem', background: '#F6F8FB' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'IBM Plex Mono', fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#2F6BFF', marginBottom: '1.25rem' }}>
-            <span style={{ width: '24px', height: '2px', background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', display: 'inline-block', borderRadius: '2px' }} />
+          <p style={{ fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#2F6BFF', marginBottom: '1.25rem', fontWeight: 600 }}>
             Onze diensten
-          </div>
+          </p>
           <h2 style={{ fontSize: 'clamp(2.5rem,5vw,4rem)', letterSpacing: '-0.03em', marginBottom: '1rem' }}>
             Digitalisering die <span style={gradText}>meetbaar</span> levert
           </h2>
@@ -232,7 +231,7 @@ export default function Features() {
             onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 50px rgba(47,107,255,0.15)' }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(47,107,255,0.08)' }}
             >
-              <div style={{ fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', letterSpacing: '0.1em', color: '#2F6BFF', marginBottom: '1rem' }}>
+              <div style={{ fontSize: '0.72rem', letterSpacing: '0.08em', color: '#2F6BFF', marginBottom: '1rem', fontWeight: 600 }}>
                 {card.num} / {card.label}
               </div>
               <h3 style={{ fontSize: '1.35rem', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>{card.title}</h3>
