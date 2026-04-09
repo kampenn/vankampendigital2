@@ -59,6 +59,44 @@ export default function Clients() {
         </div>
 
       </div>
+
+      {/* Testimonial under logos */}
+      <div className="client-logo" style={{
+        maxWidth: '680px', textAlign: 'center', marginTop: '4rem',
+        borderTop: '1px solid rgba(47,107,255,0.1)', paddingTop: '3rem'
+      }}>
+        <p style={{
+          fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+          fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 600,
+          color: '#0D1117', lineHeight: 1.6, marginBottom: '1.5rem'
+        }}>
+          "Nick is a great analist and excels at making sense of complex problems with many actors. He manages to go really in-depth whilst taking into account many different perspectives. With his approach to problem-solving he creates goodwill with his stakeholders by making them feel included and thereby creating buy-in for his conclusions. He is conscientious and professional, but also a lot of fun to work with."
+        </p>
+        <div style={{ fontFamily: 'Satoshi', fontWeight: 700, fontSize: '0.95rem', color: '#0D1117' }}>
+          Vincent
+        </div>
+        <div style={{
+          fontFamily: 'IBM Plex Mono', fontSize: '0.68rem', letterSpacing: '0.1em',
+          textTransform: 'uppercase', color: '#2F6BFF', fontWeight: 600, marginTop: '0.2rem'
+        }}>
+          Magister
+        </div>
+        <a
+          href="https://www.linkedin.com/in/nick-van-kampen/details/recommendations/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontFamily: 'IBM Plex Mono', fontSize: '0.62rem', letterSpacing: '0.05em',
+            color: 'rgba(47,107,255,0.5)', textDecoration: 'none', marginTop: '0.5rem',
+            display: 'inline-block', transition: 'color 0.3s ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.color = '#2F6BFF'}
+          onMouseLeave={e => e.currentTarget.style.color = 'rgba(47,107,255,0.5)'}
+        >
+          Bekijk alle aanbevelingen →
+        </a>
+      </div>
+
     </section>
   )
 }
