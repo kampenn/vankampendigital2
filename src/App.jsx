@@ -27,9 +27,9 @@ export default function App() {
       <VideoLanding />
       <Hero />
       <Clients />
+      <Testimonial />
       <Features />
       <Philosophy />
-      <Testimonial />
 
       <Protocol />
       <Contact />
