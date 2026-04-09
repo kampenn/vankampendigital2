@@ -15,7 +15,7 @@ export default function Testimonial() {
           trigger: containerRef.current,
           start: 'top 80%',
         },
-        y: 40, opacity: 0, duration: 1, stagger: 0.15,
+        y: 30, opacity: 0, duration: 0.9, stagger: 0.12,
         ease: 'power3.out'
       })
     }, containerRef)
@@ -24,44 +24,36 @@ export default function Testimonial() {
 
   return (
     <section ref={containerRef} style={{
-      padding: '8rem 2rem',
-      background: 'linear-gradient(135deg, #0B0E1A 0%, #131729 100%)',
+      padding: '5rem 2rem',
+      background: '#F6F8FB',
       position: 'relative', overflow: 'hidden'
     }}>
-      {/* Subtle glow */}
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-        width: '60vw', height: '60vw', maxWidth: '800px',
-        background: 'radial-gradient(circle, rgba(47,107,255,0.08) 0%, transparent 60%)',
-        pointerEvents: 'none'
-      }} />
-
-      <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+      <div style={{ maxWidth: '780px', margin: '0 auto', textAlign: 'center' }}>
         <div className="testi-item" style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: '60px', height: '60px', borderRadius: '50%',
-          background: 'rgba(47,107,255,0.1)', border: '1px solid rgba(47,107,255,0.2)',
-          color: '#2F6BFF', marginBottom: '2.5rem'
+          width: '48px', height: '48px', borderRadius: '50%',
+          background: 'rgba(47,107,255,0.08)', border: '1px solid rgba(47,107,255,0.15)',
+          color: '#2F6BFF', marginBottom: '1.75rem'
         }}>
-          <Quote size={28} />
+          <Quote size={22} />
         </div>
 
         <p className="testi-item" style={{
-          fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
+          fontSize: 'clamp(1.15rem, 2.5vw, 1.5rem)',
           fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 600,
-          color: 'white', lineHeight: 1.4, marginBottom: '3rem'
+          color: '#0D1117', lineHeight: 1.6, marginBottom: '2rem'
         }}>
           "Nick is a great analist and excels at making sense of complex problems with many actors. He manages to go really in-depth whilst taking into account many different perspectives. With his approach to problem-solving he creates goodwill with his stakeholders by making them feel included and thereby creating buy-in for his conclusions. He is conscientious and professional, but also a lot of fun to work with."
         </p>
 
-        <div className="testi-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="testi-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem' }}>
           <div style={{
-            fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1.1rem', color: 'white'
+            fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1rem', color: '#0D1117'
           }}>
             Vincent
           </div>
           <div style={{
-            fontFamily: 'IBM Plex Mono', fontSize: '0.75rem', letterSpacing: '0.1em',
+            fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', letterSpacing: '0.1em',
             textTransform: 'uppercase', color: '#2F6BFF', fontWeight: 600
           }}>
             Magister
