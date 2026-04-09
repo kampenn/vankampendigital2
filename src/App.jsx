@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Analytics } from '@vercel/analytics/react'
 
 import Navbar from './components/Navbar'
 import VideoLanding from './components/VideoLanding'
@@ -34,6 +35,7 @@ export default function App() {
       <Protocol />
       <Contact />
       <Footer />
+      <Analytics />
     </>
   )
 }
