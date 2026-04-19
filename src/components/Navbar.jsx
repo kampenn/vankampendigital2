@@ -55,7 +55,7 @@ export default function Navbar() {
     <nav style={navStyle}>
       <Logo dark={scrolled} />
       <div style={{ display: 'flex', gap: isMobile ? '1rem' : '2rem', alignItems: 'center' }}>
-        {!isMobile && [['Diensten','#diensten'],['Aanpak','#aanpak'],['Contact','#contact']].map(([label, href]) => (
+        {!isMobile && [['Diensten','#diensten'],['Bedrijfsscan','#scan'],['Aanpak','#aanpak'],['Contact','#contact']].map(([label, href]) => (
           <a key={label} href={href} style={{
             fontFamily: 'Satoshi', fontWeight: 600, fontSize: '0.9rem',
             color: scrolled ? '#0D1117' : 'white', textDecoration: 'none',
@@ -78,7 +78,7 @@ export default function Navbar() {
         }}
         onMouseEnter={e => { if(scrolled) { e.currentTarget.style.transform = 'scale(1.03) translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(47,107,255,0.5)' } }}
         onMouseLeave={e => { if(scrolled) { e.currentTarget.style.transform = 'scale(1) translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(47,107,255,0.3)' } }}
-        >Meer inzicht <ArrowRight size={14} /></a>
+        >Gratis scan <ArrowRight size={14} /></a>
       </div>
     </nav>
   )

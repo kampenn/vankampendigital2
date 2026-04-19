@@ -184,21 +184,24 @@ export default function Features() {
 
   const cards = [
     {
-      id: 'procesoptimalisatie', num: '01', label: 'Procesoptimalisatie',
-      title: 'Minder verspilling, meer resultaat',
-      desc: 'Wij analyseren uw workflows en elimineren knelpunten. Snellere processen, lagere kosten en een team dat weer waarde kan leveren.',
+      id: 'business-analyse', num: '01', label: 'Business analyse',
+      title: 'Business analyse & optimalisatie',
+      desc: 'Wij brengen uw bedrijfsprocessen in kaart, identificeren knelpunten en vertalen die naar concrete verbeteringen. Van toolselectie tot implementatie — wij zorgen dat digitalisering echt iets oplevert.',
+      tags: ['Procesoptimalisatie', 'Toolselectie', 'Kostenreductie'],
       content: <ShufflerCard />,
     },
     {
-      id: 'klantervaring', num: '02', label: 'Klantervaring',
-      title: 'Verhoog uw conversie en zorg dat klanten terugkomen',
-      desc: 'Data-gedreven personalisatie verhoogt uw conversie en zorgt dat klanten terugkomen voor meer.',
+      id: 'websites', num: '02', label: 'Websites',
+      title: 'Websites & online zichtbaarheid',
+      desc: 'Wij bouwen websites die converteren. Geen templates, maar maatwerk gericht op uw doelgroep. Inclusief hosting, SEO-basis en Google Business Profile optimalisatie.',
+      tags: ['Maatwerk websites', 'Conversie-optimalisatie', 'Hosting & beheer'],
       content: <TypewriterCard />,
     },
     {
-      id: 'digitalisering', num: '03', label: 'Tooling & AI',
-      title: 'De juiste oplossingen op het juiste moment',
-      desc: 'Wij zoeken de specifieke tooling die bij uw bedrijf past. Door toepassing van AI gaan wij altijd kwalitatief en efficiënt te werk.',
+      id: 'automatisering', num: '03', label: 'Automatisering',
+      title: 'Automatisering & koppelingen',
+      desc: 'Systemen die niet met elkaar praten kosten u uren per week. Wij koppelen uw tools aan elkaar en automatiseren terugkerende taken zodat uw team zich kan focussen op wat waarde oplevert.',
+      tags: ['Systeemkoppelingen', 'Workflow automatisering', 'API-integraties'],
       content: <SchedulerCard />,
     },
   ]
@@ -213,11 +216,8 @@ export default function Features() {
             Onze diensten
           </p>
           <h2 style={{ fontSize: 'clamp(2.5rem,5vw,4rem)', letterSpacing: '-0.03em', marginBottom: '1rem' }}>
-            Digitalisering die <span style={gradText}>meetbaar</span> levert
+            Drie manieren waarop wij uw bedrijf <span style={gradText}>laten groeien</span>
           </h2>
-          <p style={{ color: '#4A5568', maxWidth: '540px', margin: '0 auto', lineHeight: 1.75 }}>
-            Geen vage beloftes. Concrete resultaten door analyse, maatwerk en de juiste technologie.
-          </p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: '1.5rem' }}>
@@ -227,6 +227,7 @@ export default function Features() {
               borderRadius: '2rem', padding: '2rem',
               boxShadow: '0 8px 40px rgba(47,107,255,0.08)',
               transition: 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.3s ease',
+              display: 'flex', flexDirection: 'column',
             }}
             onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 50px rgba(47,107,255,0.15)' }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(47,107,255,0.08)' }}
@@ -237,6 +238,30 @@ export default function Features() {
               <h3 style={{ fontSize: '1.35rem', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>{card.title}</h3>
               <p style={{ color: '#4A5568', fontSize: '0.9rem', lineHeight: 1.7 }}>{card.desc}</p>
               {card.content}
+
+              {/* Tags */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1.25rem' }}>
+                {card.tags.map(tag => (
+                  <span key={tag} style={{
+                    fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', fontWeight: 500,
+                    padding: '0.3rem 0.75rem', borderRadius: '100px',
+                    background: 'rgba(47,107,255,0.06)', border: '1px solid rgba(47,107,255,0.12)',
+                    color: '#2F6BFF',
+                  }}>{tag}</span>
+                ))}
+              </div>
+
+              {/* CTA link */}
+              <a href="#contact" style={{
+                marginTop: '1rem', color: '#2F6BFF', textDecoration: 'none',
+                fontSize: '0.88rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                transition: 'transform 0.2s ease, opacity 0.2s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.opacity = '0.8' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.opacity = '1' }}
+              >
+                Meer weten →
+              </a>
             </div>
           ))}
         </div>

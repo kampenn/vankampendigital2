@@ -12,37 +12,24 @@ export default function Contact() {
 
     setIsSubmitting(true)
 
-    // Gekoppeld aan nick@vankampendigital.nl via Web3Forms
-    const accessKey = "f753bca6-813d-454d-a9e9-95c4dc426ef9" 
-
-    if (!accessKey || accessKey === "JOUW_WEB3FORMS_SLEUTEL_HIER") {
-      alert("Let op: De e-mail server (Web3Forms) is nog niet gekoppeld. Vul je access key in binnen src/components/Contact.jsx!")
-      setIsSubmitting(false)
-      return
-    }
-
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
-        body: JSON.stringify({
-          access_key: accessKey,
-          email: email,
-          subject: "Nieuwe aanvraag (Informatie / Gesprek / Inzicht)",
-          message: `Nieuw e-mailadres achtergelaten op de website: ${email}`,
-          from_name: "VAN KAMPEN Digital",
-        }),
+        body: JSON.stringify({ email }),
       })
+      
       const result = await response.json()
-      if (result.success) {
+      if (response.ok) {
         setSubmitted(true)
       } else {
-        alert("Er ging iets mis met de e-mail server. Probeer het later opnieuw.")
+        console.error("API Error:", result)
+        alert("Er ging iets mis met het versturen. Controleer de console.")
       }
     } catch (error) {
+      console.error("Fetch Error:", error)
       alert("Er is een netwerkfout opgetreden bij het versturen.")
     } finally {
       setIsSubmitting(false)
@@ -68,10 +55,10 @@ export default function Contact() {
         </p>
 
         <h2 style={{ color: 'white', fontSize: 'clamp(2rem,5vw,3.5rem)', marginBottom: '1rem', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-          Krijg <span style={gradText}>meer informatie</span>
+          Laten we <span style={gradText}>kennismaken</span>
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.45)', marginBottom: '2.5rem', lineHeight: 1.75 }}>
-          Laat uw e-mailadres achter voor meer algemene informatie, het inplannen van een vrijblijvend gesprek, of om simpelweg meer inzicht te krijgen in wat digitalisering u concreet op kan leveren.
+          Laat uw e-mailadres achter voor het inplannen van een vrijblijvend gesprek, het aanvragen van een gratis bedrijfsscan, of om meer inzicht te krijgen in wat digitalisering u concreet kan opleveren.
         </p>
 
         {!submitted ? (
@@ -119,11 +106,15 @@ export default function Contact() {
           </div>
         )}
 
-        <div style={{ marginTop: '2rem', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
-          {['Meer informatie', 'Vrijblijvend gesprek', 'Meer inzicht'].map(item => (
-            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'rgba(255,255,255,0.35)', fontSize: '0.8rem' }}>
-              <Check size={13} style={{ color: '#2F6BFF' }} />{item}
-            </div>
+        {/* Pill badges */}
+        <div style={{ marginTop: '2rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+          {['Vrijblijvend gesprek', 'Gratis bedrijfsscan', 'Meer informatie'].map(item => (
+            <span key={item} style={{
+              fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', fontWeight: 500,
+              padding: '0.4rem 0.85rem', borderRadius: '100px',
+              background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+              color: 'white',
+            }}>{item}</span>
           ))}
         </div>
       </div>

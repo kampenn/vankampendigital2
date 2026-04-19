@@ -55,10 +55,10 @@ export default function Hero() {
           color: 'rgba(255,255,255,0.6)', fontSize: 'clamp(1rem,2vw,1.15rem)',
           maxWidth: '500px', lineHeight: 1.75, marginBottom: '2.5rem', fontWeight: 400,
         }}>
-          Wij verhogen uw winst en besparen kosten door slimme digitalisering. Van procesoptimalisatie tot maatwerk software en websites.
+          Wij verhogen uw winst en besparen kosten door slimme digitalisering. Van business analyse tot maatwerk websites en automatisering.
         </p>
 
-        <div className="hero-item" style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="hero-item" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <a href="#contact"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
@@ -73,10 +73,26 @@ export default function Hero() {
           >
             Vrijblijvend gesprek <ArrowRight size={18} />
           </a>
+
+          <a href="#diensten"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+              padding: '1rem 2.25rem', borderRadius: '100px',
+              background: 'transparent', color: 'white',
+              fontWeight: 700, fontSize: '1rem', textDecoration: 'none',
+              border: '1px solid rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+              transition: 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),background 0.3s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.03) translateY(-1px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1) translateY(0)'; e.currentTarget.style.background = 'transparent' }}
+          >
+            Bekijk onze aanpak
+          </a>
         </div>
 
         <div className="hero-item" style={{ display: 'flex', gap: '2.5rem', marginTop: '4rem', flexWrap: 'wrap' }}>
-          {[['AI-gedreven','slimmere processen & workflows'],['Betrouwbare partner','in complete digitale strategie'],['Meetbaar','impact op uw resultaat']].map(([title,sub]) => (
+          {[['AI-gedreven','slimmere processen & workflows'],['Betrouwbare partner','in complete digitale strategie'],['Gratis bedrijfsscan','voor MKB en ZZP']].map(([title,sub]) => (
             <div key={title}>
               <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', lineHeight: 1 }}>{title}</div>
               <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.3rem' }}>{sub}</div>

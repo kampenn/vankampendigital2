@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ArrowRight } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -113,17 +114,17 @@ export default function Protocol() {
   const cards = [
     {
       step: 'STAP 01 / 03', title: 'Analyseer & begrijp',
-      desc: 'Samen ondersteund door AI duiken we in uw processen om knelpunten en kansen in kaart te brengen.',
+      desc: 'We starten altijd met luisteren. In een persoonlijk gesprek brengen we uw processen, tools en uitdagingen in kaart \u2014 ondersteund door data en AI.',
       bg: 'linear-gradient(140deg,#0D1117 0%,#131729 100%)', Visual: RotatingGeometry,
     },
     {
       step: 'STAP 02 / 03', title: 'Ontwerp & bouw',
-      desc: 'Op basis van de analyse zoeken wij de best passende tooling of bouwen we oplossingen op maat. Door het gericht inzetten van AI werken we efficiënt en met de hoogste kwaliteit.',
+      desc: 'Op basis van de analyse selecteren we de juiste tools of bouwen we een oplossing op maat. Door gericht gebruik van AI werken we snel, scherp en met de hoogste kwaliteit.',
       bg: 'linear-gradient(140deg,#0F1B3D 0%,#1C2040 100%)', Visual: ScanningGrid,
     },
     {
       step: 'STAP 03 / 03', title: 'Implementeer & meet',
-      desc: 'Wij begeleiden de uitrol, trainen uw team en monitoren de resultaten zodat uw investering zich terugverdient.',
+      desc: 'Wij begeleiden de uitrol, trainen uw team en monitoren de resultaten. Doorlopend beheer zorgt dat alles blijft werken en meegroeien met uw bedrijf.',
       bg: 'linear-gradient(140deg,#130D1F 0%,#1A1040 100%)', Visual: WaveformSVG,
     },
   ]
@@ -144,6 +145,24 @@ export default function Protocol() {
           {cards.map((card) => (
             <ProtocolCard key={card.step} {...card} />
           ))}
+        </div>
+
+        {/* Bottom CTA */}
+        <div style={{ textAlign: 'center', marginTop: '3.5rem' }}>
+          <p style={{ fontFamily: 'IBM Plex Mono', fontSize: '0.9rem', color: '#4A5568', marginBottom: '0.75rem' }}>
+            De eerste stap? Een gratis bedrijfsscan.
+          </p>
+          <a href="#contact" style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+            fontFamily: 'IBM Plex Mono', fontSize: '0.88rem', fontWeight: 600,
+            color: '#2F6BFF', textDecoration: 'none',
+            transition: 'transform 0.2s ease, opacity 0.2s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.opacity = '0.8' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.opacity = '1' }}
+          >
+            Plan uw scan <ArrowRight size={15} />
+          </a>
         </div>
       </div>
     </section>
