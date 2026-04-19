@@ -20,7 +20,7 @@ export default async function handler(request, response) {
       },
       body: JSON.stringify({
         from: 'Website Aanvraag <onboarding@resend.dev>', // Resend test domein
-        to: 'nick@vankampendigital.nl',
+        to: 'nick@vankampenconsultancy.nl',
         subject: 'Nieuwe aanvraag via website — VAN KAMPEN Digital',
         html: `<p>Nieuw e-mailadres achtergelaten op de website: <strong>${email}</strong></p>`
       })

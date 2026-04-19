@@ -26,7 +26,9 @@ export default function Contact() {
         setSubmitted(true)
       } else {
         console.error("API Error:", result)
-        alert("Er ging iets mis met het versturen. Controleer de console.")
+        // Omdat de geneste fout vanuit Resend in result.error zit:
+        const errorMsg = result.error?.message || result.message || JSON.stringify(result)
+        alert(`Er ging iets mis met het versturen:\n\n${errorMsg}\n\nKijk in Resend of je 'to' adres overeenkomt met je account, of verifieer je domein.`)
       }
     } catch (error) {
       console.error("Fetch Error:", error)
