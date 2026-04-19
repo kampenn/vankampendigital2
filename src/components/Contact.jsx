@@ -3,6 +3,7 @@ import { ArrowRight, Loader2, Check } from 'lucide-react'
 
 export default function Contact() {
   const [email, setEmail] = useState('')
+  const [botcheck, setBotcheck] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -31,6 +32,7 @@ export default function Contact() {
         body: JSON.stringify({
           access_key: accessKey,
           email: email,
+          botcheck: botcheck,
           subject: "Nieuwe aanvraag via website — VAN KAMPEN Digital",
           message: `Nieuw e-mailadres achtergelaten op de website: ${email}`,
           from_name: "VAN KAMPEN Digital",
@@ -76,6 +78,14 @@ export default function Contact() {
 
         {!submitted ? (
           <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 1 }}>
+            {/* Honeypot field om spam bots af te weren */}
+            <input 
+              type="checkbox" 
+              name="botcheck" 
+              className="hidden" 
+              style={{ display: 'none' }} 
+              onChange={e => setBotcheck(e.target.checked)} 
+            />
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <input
                 id="contact-input"
