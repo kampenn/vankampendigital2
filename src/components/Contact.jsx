@@ -12,26 +12,37 @@ export default function Contact() {
 
     setIsSubmitting(true)
 
+    // Gekoppeld aan nick@vankampendigital.nl via Web3Forms
+    const accessKey = "f753bca6-813d-454d-a9e9-95c4dc426ef9" 
+
+    if (!accessKey || accessKey === "JOUW_WEB3FORMS_SLEUTEL_HIER") {
+      alert("Let op: De e-mail server (Web3Forms) is nog niet gekoppeld. Vul je access key in binnen src/components/Contact.jsx!")
+      setIsSubmitting(false)
+      return
+    }
+
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          access_key: accessKey,
+          email: email,
+          subject: "Nieuwe aanvraag via website — VAN KAMPEN Digital",
+          message: `Nieuw e-mailadres achtergelaten op de website: ${email}`,
+          from_name: "VAN KAMPEN Digital",
+        }),
       })
-      
       const result = await response.json()
-      if (response.ok) {
+      if (result.success) {
         setSubmitted(true)
       } else {
-        console.error("API Error:", result)
-        // Omdat de geneste fout vanuit Resend in result.error zit:
-        const errorMsg = result.error?.message || result.message || JSON.stringify(result)
-        alert(`Er ging iets mis met het versturen:\n\n${errorMsg}\n\nKijk in Resend of je 'to' adres overeenkomt met je account, of verifieer je domein.`)
+        alert("Er ging iets mis met de e-mail server. Probeer het later opnieuw.")
       }
     } catch (error) {
-      console.error("Fetch Error:", error)
       alert("Er is een netwerkfout opgetreden bij het versturen.")
     } finally {
       setIsSubmitting(false)
