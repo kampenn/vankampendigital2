@@ -3,6 +3,7 @@ import { ArrowRight, Loader2, Check } from 'lucide-react'
 
 export default function Contact() {
   const [email, setEmail] = useState('')
+  const [contactType, setContactType] = useState('Meer informatie')
   const [botcheck, setBotcheck] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -33,8 +34,9 @@ export default function Contact() {
           access_key: accessKey,
           email: email,
           botcheck: botcheck,
-          subject: "Nieuwe aanvraag via website — VAN KAMPEN Digital",
-          message: `Nieuw e-mailadres achtergelaten op de website: ${email}`,
+          keuze: contactType,
+          subject: `Nieuwe aanvraag via website — VAN KAMPEN Digital: ${contactType}`,
+          message: `Nieuw e-mailadres achtergelaten op de website: ${email}\n\nGekozen onderwerp: ${contactType}`,
           from_name: "VAN KAMPEN Digital",
         }),
       })
@@ -72,12 +74,33 @@ export default function Contact() {
         <h2 style={{ color: 'white', fontSize: 'clamp(2rem,5vw,3.5rem)', marginBottom: '1rem', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
           Laten we <span style={gradText}>kennismaken</span>
         </h2>
-        <p style={{ color: 'rgba(255,255,255,0.45)', marginBottom: '2.5rem', lineHeight: 1.75 }}>
-          Laat uw e-mailadres achter voor het inplannen van een vrijblijvend gesprek, het aanvragen van een bedrijfsscan, of om meer inzicht te krijgen in wat digitalisering u concreet kan opleveren.
+        <p style={{ color: 'rgba(255,255,255,0.45)', marginBottom: '1.5rem', lineHeight: 1.75 }}>
+          Geef direct aan waar u interesse in heeft en laat uw e-mailadres achter. Wij nemen zo snel mogelijk contact met u op.
         </p>
 
         {!submitted ? (
-          <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 1 }}>
+          <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            
+            <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+              {['Vrijblijvend gesprek', 'Bedrijfsscan', 'Meer informatie'].map(item => (
+                <button 
+                  key={item} 
+                  type="button" 
+                  onClick={() => setContactType(item)}
+                  style={{
+                    fontFamily: 'Satoshi', fontSize: '0.8rem', fontWeight: 600,
+                    padding: '0.5rem 1rem', borderRadius: '100px', cursor: 'pointer',
+                    background: contactType === item ? 'linear-gradient(135deg,#2F6BFF,#7C5CFF)' : 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${contactType === item ? 'transparent' : 'rgba(47,107,255,0.3)'}`,
+                    color: 'white',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+
             {/* Honeypot field om spam bots af te weren */}
             <input 
               type="checkbox" 
@@ -129,17 +152,6 @@ export default function Contact() {
           </div>
         )}
 
-        {/* Pill badges */}
-        <div style={{ marginTop: '2rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
-          {['Vrijblijvend gesprek', 'Bedrijfsscan', 'Meer informatie'].map(item => (
-            <span key={item} style={{
-              fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', fontWeight: 500,
-              padding: '0.4rem 0.85rem', borderRadius: '100px',
-              background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-              color: 'white',
-            }}>{item}</span>
-          ))}
-        </div>
       </div>
     </section>
   )
