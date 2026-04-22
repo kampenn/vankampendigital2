@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Quote } from 'lucide-react'
@@ -22,24 +22,58 @@ const allReviews = [
 
 export default function Testimonial() {
   const containerRef = useRef(null)
+  const scrollRef = useRef(null)
   const [reviews, setReviews] = useState([])
   const [activeIndex, setActiveIndex] = useState(0)
+  const isAutoPlaying = useRef(true) // Houdt bij of de slider zelf nog mag scrollen
 
   // Randomize reviews on mount
   useEffect(() => {
     setReviews([...allReviews].sort(() => Math.random() - 0.5))
   }, [])
 
-  // Auto-slide elke 7 seconden
+  // Auto-slide timer
   useEffect(() => {
     if (reviews.length === 0) return
     const interval = setInterval(() => {
-      setActiveIndex(prev => (prev + 1) % reviews.length)
+      if (!isAutoPlaying.current) return
+      const nextIndex = (activeIndex + 1) % reviews.length
+      scrollToCard(nextIndex)
     }, 7000)
     return () => clearInterval(interval)
-  }, [reviews])
+  }, [reviews, activeIndex])
 
-  // Scroll animations
+  const scrollToCard = useCallback((i) => {
+    if (!scrollRef.current) return
+    const el = scrollRef.current
+    const targetItem = el.children[i]
+    if (targetItem) {
+      const scrollPos = targetItem.offsetLeft - (el.offsetWidth / 2) + (targetItem.offsetWidth / 2)
+      el.scrollTo({ left: scrollPos, behavior: 'smooth' })
+    }
+  }, [])
+
+  const handleScroll = (e) => {
+    const el = e.currentTarget
+    const scrollCenter = el.scrollLeft + (el.offsetWidth / 2)
+    let closestIndex = 0
+    let minDiff = Infinity
+
+    Array.from(el.children).forEach((child, i) => {
+      const childCenter = child.offsetLeft + (child.offsetWidth / 2)
+      const diff = Math.abs(childCenter - scrollCenter)
+      if (diff < minDiff) { 
+        minDiff = diff
+        closestIndex = i 
+      }
+    })
+
+    if (closestIndex !== activeIndex) {
+      setActiveIndex(closestIndex)
+    }
+  }
+
+  // Scroll animations voor de hele sectie
   useEffect(() => {
     if (reviews.length === 0) return
     
@@ -58,9 +92,11 @@ export default function Testimonial() {
 
   return (
     <section ref={containerRef} style={{
-      padding: '5rem 0',
+      padding: '5rem 0 3rem 0',
       background: '#F6F8FB',
-      position: 'relative', overflow: 'hidden'
+      position: 'relative', overflow: 'hidden',
+      width: '100vw',
+      marginLeft: 'calc(-50vw + 50%)', // Garandeert full bleed achtergrond als parent een wrapper is
     }}>
       <div className="testi-item" style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
@@ -73,55 +109,88 @@ export default function Testimonial() {
         </div>
       </div>
 
-      <div className="testi-item" style={{ maxWidth: '800px', margin: '0 auto', overflow: 'hidden', paddingBottom: '1rem' }}>
-        <div style={{
+      <div 
+        ref={scrollRef}
+        className="testi-item testi-scroller" 
+        onScroll={handleScroll}
+        // Stop autoplay als de bezoeker zelf gaat slepen/scrollen
+        onTouchStart={() => isAutoPlaying.current = false}
+        onMouseEnter={() => isAutoPlaying.current = false}
+        onMouseLeave={() => isAutoPlaying.current = true}
+        style={{
           display: 'flex',
-          transition: 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
-          transform: `translateX(-${activeIndex * 100}%)`,
-        }}>
-          {reviews.map((review) => (
+          overflowX: 'auto',
+          scrollSnapType: 'x mandatory',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch',
+          padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', // Centrering!
+          gap: '2.5rem',
+          alignItems: 'center',
+        }}
+      >
+        <style>{`.testi-scroller::-webkit-scrollbar { display: none; }`}</style>
+
+        {reviews.map((review, i) => {
+          const isActive = activeIndex === i;
+          return (
             <div key={review.id} style={{
-              flex: '0 0 100%',
-              padding: '0 1.5rem',
-              textAlign: 'center',
+              flex: '0 0 auto',
+              width: 'clamp(300px, 75vw, 760px)',
+              scrollSnapAlign: 'center',
               display: 'flex', flexDirection: 'column', alignItems: 'center',
-              boxSizing: 'border-box'
+              textAlign: 'center',
+              background: 'white',
+              padding: 'clamp(2rem, 5vw, 3.5rem)',
+              borderRadius: '2rem',
+              boxShadow: isActive ? '0 12px 40px rgba(47,107,255,0.08)' : 'none',
+              opacity: isActive ? 1 : 0.25,
+              filter: isActive ? 'blur(0px)' : 'blur(4px)',
+              transform: isActive ? 'scale(1)' : 'scale(0.92)',
+              transition: 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
+              cursor: 'grab'
             }}>
               <p style={{
-                fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
-                fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 600,
-                color: '#0D1117', lineHeight: 1.6, marginBottom: '2.5rem'
+                fontFamily: 'Satoshi', // Aangepast naar leesbaar web font
+                fontSize: 'clamp(1rem, 2vw, 1.25rem)', 
+                fontWeight: 500,
+                color: '#1A202C', 
+                lineHeight: 1.7, 
+                marginBottom: '2.5rem'
               }}>
                 "{review.text}"
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem' }}>
                 <div style={{
-                  fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1rem', color: '#0D1117'
+                  fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1.05rem', color: '#0D1117'
                 }}>
                   {review.name}
                 </div>
                 <div style={{
-                  fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', letterSpacing: '0.1em',
+                  fontFamily: 'IBM Plex Mono', fontSize: '0.75rem', letterSpacing: '0.1em',
                   textTransform: 'uppercase', color: '#2F6BFF', fontWeight: 600
                 }}>
                   {review.title}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          )
+        })}
       </div>
 
       {/* Navigatie Dotjes */}
       {reviews.length > 1 && (
         <div className="testi-item" style={{
-          display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem', marginBottom: '2.5rem'
+          display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '2rem', marginBottom: '2.5rem'
         }}>
           {reviews.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => {
+                isAutoPlaying.current = false;
+                scrollToCard(i);
+              }}
               style={{
                 width: activeIndex === i ? '24px' : '8px',
                 height: '8px',
