@@ -106,7 +106,8 @@ export default function ScanCTA() {
             }}>
               In 60 minuten brengen we uw processen, tools en knelpunten in kaart. 
               Vervolgens ontvangt u een scanrapport waarin de beste verbeterpunten 
-              direct op impact zijn gerangschikt. Geen verkooppraatjes, maar concreet inzicht.
+              direct op impact zijn gerangschikt. Zo heeft u direct inzicht en de 
+              mogelijkheid om de oplossing uit te voeren.
             </p>
 
             <div className="scan-item" style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2.5rem' }}>
