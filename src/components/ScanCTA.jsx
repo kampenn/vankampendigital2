@@ -89,7 +89,7 @@ export default function ScanCTA() {
               color: 'white', fontSize: 'clamp(2rem,4.5vw,3rem)',
               lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '0.75rem', fontWeight: 900,
             }}>
-              Weet niet waar te beginnen?
+              Klaar voor de volgende stap?
             </h2>
 
             <p className="scan-item" style={{
@@ -131,11 +131,11 @@ export default function ScanCTA() {
               background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', color: 'white',
               fontWeight: 700, fontSize: '1rem', textDecoration: 'none',
               boxShadow: '0 4px 24px rgba(47,107,255,0.4)',
-              transition: 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.3s ease',
+              transition: 'box-shadow 0.3s ease',
               position: 'relative', overflow: 'hidden',
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.03) translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(47,107,255,0.55)' }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1) translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,107,255,0.4)' }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 40px rgba(47,107,255,0.65)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,107,255,0.4)' }}
             >
               Plan uw scan <ArrowRight size={18} />
             </a>
