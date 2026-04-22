@@ -25,7 +25,12 @@ export default function Testimonial() {
   const scrollRef = useRef(null)
   const [reviews, setReviews] = useState([])
   const [activeIndex, setActiveIndex] = useState(0)
-  const isAutoPlaying = useRef(true) // Houdt bij of de slider zelf nog mag scrollen
+  const isAutoPlaying = useRef(true) 
+
+  // Muis drag state voor desktop
+  const isDragging = useRef(false)
+  const startX = useRef(0)
+  const scrollLeftStart = useRef(0)
 
   // Randomize reviews on mount
   useEffect(() => {
@@ -73,6 +78,31 @@ export default function Testimonial() {
     }
   }
 
+  const handleMouseDown = (e) => {
+    isDragging.current = true
+    isAutoPlaying.current = false
+    startX.current = e.pageX - scrollRef.current.offsetLeft
+    scrollLeftStart.current = scrollRef.current.scrollLeft
+  }
+
+  const handleMouseLeave = () => {
+    isDragging.current = false
+    isAutoPlaying.current = true
+  }
+
+  const handleMouseUp = () => {
+    isDragging.current = false
+    isAutoPlaying.current = true
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging.current) return
+    e.preventDefault()
+    const x = e.pageX - scrollRef.current.offsetLeft
+    const walk = (x - startX.current) * 1.5 // Scroll snelheid
+    scrollRef.current.scrollLeft = scrollLeftStart.current - walk
+  }
+
   // Scroll animations voor de hele sectie
   useEffect(() => {
     if (reviews.length === 0) return
@@ -113,20 +143,23 @@ export default function Testimonial() {
         ref={scrollRef}
         className="testi-item testi-scroller" 
         onScroll={handleScroll}
-        // Stop autoplay als de bezoeker zelf gaat slepen/scrollen
+        // Stop autoplay and handle grabbing
         onTouchStart={() => isAutoPlaying.current = false}
-        onMouseEnter={() => isAutoPlaying.current = false}
-        onMouseLeave={() => isAutoPlaying.current = true}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
         style={{
           display: 'flex',
           overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
+          scrollSnapType: isDragging.current ? 'none' : 'x mandatory', // Disables snap while dragging for smoother feel
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
-          padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', // Centrering!
+          padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', 
           gap: '2.5rem',
           alignItems: 'center',
+          cursor: isDragging.current ? 'grabbing' : 'grab' // Verander cursor tijdens slepen
         }}
       >
         <style>{`.testi-scroller::-webkit-scrollbar { display: none; }`}</style>
