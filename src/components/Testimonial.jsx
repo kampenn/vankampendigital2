@@ -31,6 +31,7 @@ export default function Testimonial() {
   // Muis drag state refs
   const startX = useRef(0)
   const scrollLeftStart = useRef(0)
+  const totalWalk = useRef(0)
 
   // Randomize reviews on mount
   useEffect(() => {
@@ -85,23 +86,38 @@ export default function Testimonial() {
     isAutoPlaying.current = false
     startX.current = e.pageX - scrollRef.current.offsetLeft
     scrollLeftStart.current = scrollRef.current.scrollLeft
+    totalWalk.current = 0 // Reset
   }
 
   const handleMouseLeave = () => {
-    setIsDragging(false)
-    isAutoPlaying.current = true
+    if (isDragging) finishDrag()
   }
 
   const handleMouseUp = () => {
+    if (isDragging) finishDrag()
+  }
+
+  const finishDrag = () => {
     setIsDragging(false)
     isAutoPlaying.current = true
+    
+    // Smooth swipe drempel: bij maar 30 pixels slepen gaat hij al over naar de volgende
+    if (totalWalk.current < -30) {
+      scrollToCard(Math.min(activeIndex + 1, reviews.length - 1))
+    } else if (totalWalk.current > 30) {
+      scrollToCard(Math.max(activeIndex - 1, 0))
+    } else {
+      scrollToCard(activeIndex)
+    }
+    totalWalk.current = 0
   }
 
   const handleMouseMove = (e) => {
     if (!isDragging) return
     e.preventDefault() // Voorkomt vervelende tekstselectie tijdens het slepen
     const x = e.pageX - scrollRef.current.offsetLeft
-    const walk = (x - startX.current) * 1.5 // Scroll snelheid
+    totalWalk.current = x - startX.current
+    const walk = totalWalk.current * 1.5 // Scroll snelheid
     scrollRef.current.scrollLeft = scrollLeftStart.current - walk
   }
 
