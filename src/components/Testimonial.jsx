@@ -25,13 +25,14 @@ export default function Testimonial() {
   const scrollRef = useRef(null)
   const [reviews, setReviews] = useState([])
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
   const isAutoPlaying = useRef(true) 
 
   // Muis drag state refs
+  const isDragging = useRef(false)
   const startX = useRef(0)
   const scrollLeftStart = useRef(0)
   const totalWalk = useRef(0)
+  const snapTimeout = useRef(null)
 
   // Randomize reviews on mount
   useEffect(() => {
@@ -54,8 +55,19 @@ export default function Testimonial() {
     const el = scrollRef.current
     const targetItem = el.children[i]
     if (targetItem) {
+      // Tijdelijk de force-snap uitzetten om onderbrekingen van de smooth-scroll te voorkomen
+      el.style.scrollSnapType = 'none'
+      
       const scrollPos = targetItem.offsetLeft - (el.offsetWidth / 2) + (targetItem.offsetWidth / 2)
       el.scrollTo({ left: scrollPos, behavior: 'smooth' })
+      
+      // Zet de verplichte CSS snap pas weer aan als de scroll (van ca 400ms) 100% klaar is
+      clearTimeout(snapTimeout.current)
+      snapTimeout.current = setTimeout(() => {
+        if (scrollRef.current && !isDragging.current) {
+          scrollRef.current.style.scrollSnapType = 'x mandatory'
+        }
+      }, 600)
     }
   }, [])
 
@@ -82,24 +94,36 @@ export default function Testimonial() {
   }, [reviews])
 
   const handleMouseDown = (e) => {
-    setIsDragging(true)
+    isDragging.current = true
     isAutoPlaying.current = false
     startX.current = e.pageX - scrollRef.current.offsetLeft
     scrollLeftStart.current = scrollRef.current.scrollLeft
     totalWalk.current = 0 // Reset
+    
+    // Imperative UI stops to prevent React render-cycle stutters
+    if (scrollRef.current) {
+      scrollRef.current.style.scrollSnapType = 'none'
+      scrollRef.current.style.cursor = 'grabbing'
+    }
+    document.body.style.userSelect = 'none' // Globale tekst-selectie preventie tijden het slepen
   }
 
   const handleMouseLeave = () => {
-    if (isDragging) finishDrag()
+    if (isDragging.current) finishDrag()
   }
 
   const handleMouseUp = () => {
-    if (isDragging) finishDrag()
+    if (isDragging.current) finishDrag()
   }
 
   const finishDrag = () => {
-    setIsDragging(false)
+    isDragging.current = false
     isAutoPlaying.current = true
+    
+    if (scrollRef.current) {
+      scrollRef.current.style.cursor = 'grab'
+    }
+    document.body.style.userSelect = 'auto'
     
     // Smooth swipe drempel: bij maar 30 pixels slepen gaat hij al over naar de volgende
     if (totalWalk.current < -30) {
@@ -113,8 +137,8 @@ export default function Testimonial() {
   }
 
   const handleMouseMove = (e) => {
-    if (!isDragging) return
-    e.preventDefault() // Voorkomt vervelende tekstselectie tijdens het slepen
+    if (!isDragging.current) return
+    e.preventDefault() // Voorkomt domme browser-native events
     const x = e.pageX - scrollRef.current.offsetLeft
     totalWalk.current = x - startX.current
     const walk = totalWalk.current * 1.5 // Scroll snelheid
@@ -169,15 +193,14 @@ export default function Testimonial() {
         style={{
           display: 'flex',
           overflowX: 'auto',
-          scrollSnapType: isDragging ? 'none' : 'x mandatory', // Dit werkt nu wél perfect omdat het state is!
+          scrollSnapType: 'x mandatory', // Hersteld naar statische beginwaarde, JS neemt sturing over tijdens drag
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
           padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', 
           gap: '2.5rem',
           alignItems: 'center',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          userSelect: isDragging ? 'none' : 'auto' // Voorkomt tekst highlights
+          cursor: 'grab',
         }}
       >
         <style>{`.testi-scroller::-webkit-scrollbar { display: none; }`}</style>
