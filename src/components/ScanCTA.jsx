@@ -94,10 +94,11 @@ export default function ScanCTA() {
             </h2>
 
             <p className="scan-item" style={{
+              color: 'white',
               fontSize: 'clamp(1.15rem,2.5vw,1.5rem)', fontWeight: 700,
               lineHeight: 1.2, marginBottom: '1.5rem',
             }}>
-              Start met een <span style={gradText}>bedrijfsscan</span>
+              Start met een bedrijfsscan
             </p>
 
             <p className="scan-item" style={{
