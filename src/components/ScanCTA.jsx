@@ -51,7 +51,6 @@ export default function ScanCTA() {
   }
 
   const usps = [
-    'Vrijblijvend en kosteloos',
     'Op locatie of online',
     'Rapport binnen een week',
   ]
