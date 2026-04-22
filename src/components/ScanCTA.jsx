@@ -104,9 +104,9 @@ export default function ScanCTA() {
               color: 'rgba(255,255,255,0.5)', fontSize: '0.95rem',
               lineHeight: 1.75, marginBottom: '2rem', maxWidth: '480px',
             }}>
-              In 60 minuten brengen wij uw processen, tools en knelpunten in kaart.
-              U ontvangt een scanrapport met uw top verbeterpunten — gerangschikt op impact.
-              Geen verkooppraatje, puur inzicht.
+              In 60 minuten brengen we uw processen, tools en knelpunten in kaart. 
+              Vervolgens ontvangt u een scanrapport waarin de beste verbeterpunten 
+              direct op impact zijn gerangschikt. Geen verkooppraatjes, maar concreet inzicht.
             </p>
 
             <div className="scan-item" style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2.5rem' }}>
