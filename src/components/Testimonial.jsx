@@ -23,14 +23,25 @@ const allReviews = [
 export default function Testimonial() {
   const containerRef = useRef(null)
   const [reviews, setReviews] = useState([])
+  const [activeIndex, setActiveIndex] = useState(0)
 
   // Randomize reviews on mount
   useEffect(() => {
     setReviews([...allReviews].sort(() => Math.random() - 0.5))
   }, [])
 
+  // Auto-slide elke 7 seconden
   useEffect(() => {
-    if (reviews.length === 0) return;
+    if (reviews.length === 0) return
+    const interval = setInterval(() => {
+      setActiveIndex(prev => (prev + 1) % reviews.length)
+    }, 7000)
+    return () => clearInterval(interval)
+  }, [reviews])
+
+  // Scroll animations
+  useEffect(() => {
+    if (reviews.length === 0) return
     
     const ctx = gsap.context(() => {
       gsap.from('.testi-item', {
@@ -62,25 +73,20 @@ export default function Testimonial() {
         </div>
       </div>
 
-      <div className="testi-item" style={{
-        display: 'flex',
-        overflowX: 'auto',
-        scrollSnapType: 'x mandatory',
-        scrollbarWidth: 'none', /* Firefox */
-        msOverflowStyle: 'none',  /* IE and Edge */
-        paddingBottom: '2rem',
-      }}>
-        <style>{`.testi-item::-webkit-scrollbar { display: none; }`}</style>
-        
-        {reviews.map((review) => (
-          <div key={review.id} style={{
-            flex: '0 0 100%',
-            scrollSnapAlign: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            cursor: 'grab' // Hinting that it's swipeable
-          }}>
-            <div style={{ maxWidth: '780px', width: '100%', textAlign: 'center', padding: '0 1.5rem' }}>
+      <div className="testi-item" style={{ maxWidth: '800px', margin: '0 auto', overflow: 'hidden', paddingBottom: '1rem' }}>
+        <div style={{
+          display: 'flex',
+          transition: 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+          transform: `translateX(-${activeIndex * 100}%)`,
+        }}>
+          {reviews.map((review) => (
+            <div key={review.id} style={{
+              flex: '0 0 100%',
+              padding: '0 1.5rem',
+              textAlign: 'center',
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              boxSizing: 'border-box'
+            }}>
               <p style={{
                 fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
                 fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 600,
@@ -103,9 +109,33 @@ export default function Testimonial() {
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+
+      {/* Navigatie Dotjes */}
+      {reviews.length > 1 && (
+        <div className="testi-item" style={{
+          display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem', marginBottom: '2.5rem'
+        }}>
+          {reviews.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIndex(i)}
+              style={{
+                width: activeIndex === i ? '24px' : '8px',
+                height: '8px',
+                borderRadius: '4px',
+                background: activeIndex === i ? '#2F6BFF' : 'rgba(47,107,255,0.2)',
+                border: 'none', cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                padding: 0
+              }}
+              aria-label={`Ga naar review ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="testi-item" style={{ textAlign: 'center' }}>
         <a
