@@ -6,6 +6,7 @@ import Navbar from './components/Navbar'
 import VideoLanding from './components/VideoLanding'
 import Hero from './components/Hero'
 import Clients from './components/Clients'
+import Testimonial from './components/Testimonial'
 import Features from './components/Features'
 import ScanCTA from './components/ScanCTA'
 import Philosophy from './components/Philosophy'
@@ -26,6 +27,7 @@ export default function App() {
       <VideoLanding />
       <Hero />
       <Clients />
+      <Testimonial />
       <Features />
       <ScanCTA />
       <Philosophy />
