@@ -25,10 +25,10 @@ export default function Testimonial() {
   const scrollRef = useRef(null)
   const [reviews, setReviews] = useState([])
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
   const isAutoPlaying = useRef(true) 
 
-  // Muis drag state voor desktop
-  const isDragging = useRef(false)
+  // Muis drag state refs
   const startX = useRef(0)
   const scrollLeftStart = useRef(0)
 
@@ -58,46 +58,48 @@ export default function Testimonial() {
     }
   }, [])
 
-  const handleScroll = (e) => {
-    const el = e.currentTarget
-    const scrollCenter = el.scrollLeft + (el.offsetWidth / 2)
-    let closestIndex = 0
-    let minDiff = Infinity
+  // Gebruik IntersectionObserver voor foutloze en high-performance detectie van de actieve card
+  useEffect(() => {
+    if (!scrollRef.current || reviews.length === 0) return
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveIndex(Number(entry.target.dataset.index))
+        }
+      })
+    }, { root: scrollRef.current, threshold: 0.6 })
 
-    Array.from(el.children).forEach((child, i) => {
-      const childCenter = child.offsetLeft + (child.offsetWidth / 2)
-      const diff = Math.abs(childCenter - scrollCenter)
-      if (diff < minDiff) { 
-        minDiff = diff
-        closestIndex = i 
+    const children = scrollRef.current.children
+    Array.from(children).forEach(child => {
+      // Observeer alleen de review cards (die data-index hebben)
+      if (child.hasAttribute('data-index')) {
+        observer.observe(child)
       }
     })
 
-    if (closestIndex !== activeIndex) {
-      setActiveIndex(closestIndex)
-    }
-  }
+    return () => observer.disconnect()
+  }, [reviews])
 
   const handleMouseDown = (e) => {
-    isDragging.current = true
+    setIsDragging(true)
     isAutoPlaying.current = false
     startX.current = e.pageX - scrollRef.current.offsetLeft
     scrollLeftStart.current = scrollRef.current.scrollLeft
   }
 
   const handleMouseLeave = () => {
-    isDragging.current = false
+    setIsDragging(false)
     isAutoPlaying.current = true
   }
 
   const handleMouseUp = () => {
-    isDragging.current = false
+    setIsDragging(false)
     isAutoPlaying.current = true
   }
 
   const handleMouseMove = (e) => {
-    if (!isDragging.current) return
-    e.preventDefault()
+    if (!isDragging) return
+    e.preventDefault() // Voorkomt vervelende tekstselectie tijdens het slepen
     const x = e.pageX - scrollRef.current.offsetLeft
     const walk = (x - startX.current) * 1.5 // Scroll snelheid
     scrollRef.current.scrollLeft = scrollLeftStart.current - walk
@@ -142,7 +144,6 @@ export default function Testimonial() {
       <div 
         ref={scrollRef}
         className="testi-item testi-scroller" 
-        onScroll={handleScroll}
         // Stop autoplay and handle grabbing
         onTouchStart={() => isAutoPlaying.current = false}
         onMouseDown={handleMouseDown}
@@ -152,14 +153,15 @@ export default function Testimonial() {
         style={{
           display: 'flex',
           overflowX: 'auto',
-          scrollSnapType: isDragging.current ? 'none' : 'x mandatory', // Disables snap while dragging for smoother feel
+          scrollSnapType: isDragging ? 'none' : 'x mandatory', // Dit werkt nu wél perfect omdat het state is!
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
           padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', 
           gap: '2.5rem',
           alignItems: 'center',
-          cursor: isDragging.current ? 'grabbing' : 'grab' // Verander cursor tijdens slepen
+          cursor: isDragging ? 'grabbing' : 'grab',
+          userSelect: isDragging ? 'none' : 'auto' // Voorkomt tekst highlights
         }}
       >
         <style>{`.testi-scroller::-webkit-scrollbar { display: none; }`}</style>
@@ -167,7 +169,7 @@ export default function Testimonial() {
         {reviews.map((review, i) => {
           const isActive = activeIndex === i;
           return (
-            <div key={review.id} style={{
+            <div data-index={i} key={review.id} style={{
               flex: '0 0 auto',
               width: 'clamp(300px, 75vw, 760px)',
               scrollSnapAlign: 'center',
@@ -177,11 +179,10 @@ export default function Testimonial() {
               padding: 'clamp(2rem, 5vw, 3.5rem)',
               borderRadius: '2rem',
               boxShadow: isActive ? '0 12px 40px rgba(47,107,255,0.08)' : 'none',
-              opacity: isActive ? 1 : 0.25,
-              filter: isActive ? 'blur(0px)' : 'blur(4px)',
+              opacity: isActive ? 1 : 0.35, // Blur weggehaald! Alleen opacity transition overgehouden ivm rendering bugs.
               transform: isActive ? 'scale(1)' : 'scale(0.92)',
               transition: 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
-              cursor: 'grab'
+              cursor: 'inherit'
             }}>
               <p style={{
                 fontFamily: 'Satoshi', // Aangepast naar leesbaar web font
