@@ -150,7 +150,7 @@ export default function Protocol() {
         {/* Bottom CTA */}
         <div style={{ textAlign: 'center', marginTop: '3.5rem' }}>
           <p style={{ fontFamily: 'IBM Plex Mono', fontSize: '0.9rem', color: '#4A5568', marginBottom: '0.75rem' }}>
-            De eerste stap? Een gratis bedrijfsscan.
+            De eerste stap? Een bedrijfsscan.
           </p>
           <a href="#contact" style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.4rem',

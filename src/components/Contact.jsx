@@ -73,7 +73,7 @@ export default function Contact() {
           Laten we <span style={gradText}>kennismaken</span>
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.45)', marginBottom: '2.5rem', lineHeight: 1.75 }}>
-          Laat uw e-mailadres achter voor het inplannen van een vrijblijvend gesprek, het aanvragen van een gratis bedrijfsscan, of om meer inzicht te krijgen in wat digitalisering u concreet kan opleveren.
+          Laat uw e-mailadres achter voor het inplannen van een vrijblijvend gesprek, het aanvragen van een bedrijfsscan, of om meer inzicht te krijgen in wat digitalisering u concreet kan opleveren.
         </p>
 
         {!submitted ? (
@@ -131,7 +131,7 @@ export default function Contact() {
 
         {/* Pill badges */}
         <div style={{ marginTop: '2rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
-          {['Vrijblijvend gesprek', 'Gratis bedrijfsscan', 'Meer informatie'].map(item => (
+          {['Vrijblijvend gesprek', 'Bedrijfsscan', 'Meer informatie'].map(item => (
             <span key={item} style={{
               fontFamily: 'IBM Plex Mono', fontSize: '0.7rem', fontWeight: 500,
               padding: '0.4rem 0.85rem', borderRadius: '100px',

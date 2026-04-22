@@ -83,7 +83,7 @@ export default function ScanCTA() {
               display: 'flex', alignItems: 'center', gap: '0.5rem',
             }}>
               <span style={{ width: '24px', height: '2px', background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', borderRadius: '2px', display: 'inline-block' }} />
-              Gratis bedrijfsscan
+              Bedrijfsscan
             </p>
 
             <h2 className="scan-item" style={{
@@ -97,7 +97,7 @@ export default function ScanCTA() {
               fontSize: 'clamp(1.15rem,2.5vw,1.5rem)', fontWeight: 700,
               lineHeight: 1.2, marginBottom: '1.5rem',
             }}>
-              Start met een <span style={gradText}>gratis bedrijfsscan</span>
+              Start met een <span style={gradText}>bedrijfsscan</span>
             </p>
 
             <p className="scan-item" style={{
@@ -136,7 +136,7 @@ export default function ScanCTA() {
             onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.03) translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(47,107,255,0.55)' }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1) translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(47,107,255,0.4)' }}
             >
-              Plan uw gratis scan <ArrowRight size={18} />
+              Plan uw scan <ArrowRight size={18} />
             </a>
           </div>
 

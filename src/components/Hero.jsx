@@ -92,7 +92,7 @@ export default function Hero() {
         </div>
 
         <div className="hero-item" style={{ display: 'flex', gap: '2.5rem', marginTop: '4rem', flexWrap: 'wrap' }}>
-          {[['AI-gedreven','slimmere processen & workflows'],['Betrouwbare partner','in complete digitale strategie'],['Gratis bedrijfsscan','voor MKB en ZZP']].map(([title,sub]) => (
+          {[['AI-gedreven','slimmere processen & workflows'],['Betrouwbare partner','in complete digitale strategie'],['Bedrijfsscan','voor MKB en ZZP']].map(([title,sub]) => (
             <div key={title}>
               <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', lineHeight: 1 }}>{title}</div>
               <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.3rem' }}>{sub}</div>

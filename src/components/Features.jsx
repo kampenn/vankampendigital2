@@ -226,11 +226,11 @@ export default function Features() {
               background: 'white', border: '1px solid rgba(47,107,255,0.1)',
               borderRadius: '2rem', padding: '2rem',
               boxShadow: '0 8px 40px rgba(47,107,255,0.08)',
-              transition: 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.3s ease',
+              transition: 'box-shadow 0.3s ease',
               display: 'flex', flexDirection: 'column',
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 50px rgba(47,107,255,0.15)' }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(47,107,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 16px 50px rgba(47,107,255,0.15)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 40px rgba(47,107,255,0.08)' }}
             >
               <div style={{ fontSize: '0.72rem', letterSpacing: '0.08em', color: '#2F6BFF', marginBottom: '1rem', fontWeight: 600 }}>
                 {card.num} / {card.label}
