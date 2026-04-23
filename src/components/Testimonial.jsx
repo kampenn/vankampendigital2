@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Quote } from 'lucide-react'
+import { Quote, ChevronLeft, ChevronRight } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -27,13 +27,6 @@ export default function Testimonial() {
   const [activeIndex, setActiveIndex] = useState(0)
   const isAutoPlaying = useRef(true) 
 
-  // Muis drag state refs
-  const isDragging = useRef(false)
-  const startX = useRef(0)
-  const scrollLeftStart = useRef(0)
-  const totalWalk = useRef(0)
-  const snapTimeout = useRef(null)
-
   // Randomize reviews on mount
   useEffect(() => {
     setReviews([...allReviews].sort(() => Math.random() - 0.5))
@@ -55,19 +48,8 @@ export default function Testimonial() {
     const el = scrollRef.current
     const targetItem = el.children[i]
     if (targetItem) {
-      // Tijdelijk de force-snap uitzetten om onderbrekingen van de smooth-scroll te voorkomen
-      el.style.scrollSnapType = 'none'
-      
       const scrollPos = targetItem.offsetLeft - (el.offsetWidth / 2) + (targetItem.offsetWidth / 2)
       el.scrollTo({ left: scrollPos, behavior: 'smooth' })
-      
-      // Zet de verplichte CSS snap pas weer aan als de scroll (van ca 400ms) 100% klaar is
-      clearTimeout(snapTimeout.current)
-      snapTimeout.current = setTimeout(() => {
-        if (scrollRef.current && !isDragging.current) {
-          scrollRef.current.style.scrollSnapType = 'x mandatory'
-        }
-      }, 600)
     }
   }, [])
 
@@ -92,58 +74,6 @@ export default function Testimonial() {
 
     return () => observer.disconnect()
   }, [reviews])
-
-  const handleMouseDown = (e) => {
-    isDragging.current = true
-    isAutoPlaying.current = false
-    startX.current = e.pageX - scrollRef.current.offsetLeft
-    scrollLeftStart.current = scrollRef.current.scrollLeft
-    totalWalk.current = 0 // Reset
-    
-    // Imperative UI stops to prevent React render-cycle stutters
-    if (scrollRef.current) {
-      scrollRef.current.style.scrollSnapType = 'none'
-      scrollRef.current.style.cursor = 'grabbing'
-    }
-    document.body.style.userSelect = 'none' // Globale tekst-selectie preventie tijden het slepen
-  }
-
-  const handleMouseLeave = () => {
-    if (isDragging.current) finishDrag()
-  }
-
-  const handleMouseUp = () => {
-    if (isDragging.current) finishDrag()
-  }
-
-  const finishDrag = () => {
-    isDragging.current = false
-    isAutoPlaying.current = true
-    
-    if (scrollRef.current) {
-      scrollRef.current.style.cursor = 'grab'
-    }
-    document.body.style.userSelect = 'auto'
-    
-    // Smooth swipe drempel: bij maar 30 pixels slepen gaat hij al over naar de volgende
-    if (totalWalk.current < -30) {
-      scrollToCard(Math.min(activeIndex + 1, reviews.length - 1))
-    } else if (totalWalk.current > 30) {
-      scrollToCard(Math.max(activeIndex - 1, 0))
-    } else {
-      scrollToCard(activeIndex)
-    }
-    totalWalk.current = 0
-  }
-
-  const handleMouseMove = (e) => {
-    if (!isDragging.current) return
-    e.preventDefault() // Voorkomt domme browser-native events
-    const x = e.pageX - scrollRef.current.offsetLeft
-    totalWalk.current = x - startX.current
-    const walk = totalWalk.current * 1.5 // Scroll snelheid
-    scrollRef.current.scrollLeft = scrollLeftStart.current - walk
-  }
 
   // Scroll animations voor de hele sectie
   useEffect(() => {
@@ -181,75 +111,102 @@ export default function Testimonial() {
         </div>
       </div>
 
-      <div 
-        ref={scrollRef}
-        className="testi-item testi-scroller" 
-        // Stop autoplay and handle grabbing
-        onTouchStart={() => isAutoPlaying.current = false}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-        style={{
-          display: 'flex',
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory', // Hersteld naar statische beginwaarde, JS neemt sturing over tijdens drag
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch',
-          padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', 
-          gap: '2.5rem',
-          alignItems: 'center',
-          cursor: 'grab',
-        }}
-      >
-        <style>{`.testi-scroller::-webkit-scrollbar { display: none; }`}</style>
+      <div style={{ position: 'relative' }}>
+        
+        {/* On-screen Controls voor muisgebruikers */}
+        <button 
+          onClick={() => { isAutoPlaying.current = false; scrollToCard(Math.max(activeIndex - 1, 0)) }}
+          style={{
+            position: 'absolute', left: 'max(2rem, calc(50vw - 420px))', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
+            background: 'white', border: '1px solid rgba(47,107,255,0.1)', borderRadius: '50%', width: '48px', height: '48px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2F6BFF', cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.05)', opacity: activeIndex === 0 ? 0.3 : 1, pointerEvents: activeIndex === 0 ? 'none' : 'auto',
+            transition: 'all 0.3s ease'
+          }}
+          aria-label="Vorige review"
+        >
+          <ChevronLeft size={24} />
+        </button>
 
-        {reviews.map((review, i) => {
-          const isActive = activeIndex === i;
-          return (
-            <div data-index={i} key={review.id} style={{
-              flex: '0 0 auto',
-              width: 'clamp(300px, 75vw, 760px)',
-              scrollSnapAlign: 'center',
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              textAlign: 'center',
-              background: 'white',
-              padding: 'clamp(2rem, 5vw, 3.5rem)',
-              borderRadius: '2rem',
-              boxShadow: isActive ? '0 12px 40px rgba(47,107,255,0.08)' : 'none',
-              opacity: isActive ? 1 : 0.35, // Blur weggehaald! Alleen opacity transition overgehouden ivm rendering bugs.
-              transform: isActive ? 'scale(1)' : 'scale(0.92)',
-              transition: 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
-              cursor: 'inherit'
-            }}>
-              <p style={{
-                fontFamily: 'Satoshi', // Aangepast naar leesbaar web font
-                fontSize: 'clamp(1rem, 2vw, 1.25rem)', 
-                fontWeight: 500,
-                color: '#1A202C', 
-                lineHeight: 1.7, 
-                marginBottom: '2.5rem'
+        <button 
+          onClick={() => { isAutoPlaying.current = false; scrollToCard(Math.min(activeIndex + 1, reviews.length - 1)) }}
+          style={{
+            position: 'absolute', right: 'max(2rem, calc(50vw - 420px))', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
+            background: 'white', border: '1px solid rgba(47,107,255,0.1)', borderRadius: '50%', width: '48px', height: '48px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2F6BFF', cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.05)', opacity: activeIndex === reviews.length - 1 ? 0.3 : 1, pointerEvents: activeIndex === reviews.length - 1 ? 'none' : 'auto',
+            transition: 'all 0.3s ease'
+          }}
+          aria-label="Volgende review"
+        >
+          <ChevronRight size={24} />
+        </button>
+
+        <div 
+          ref={scrollRef}
+          className="testi-item testi-scroller" 
+          onTouchStart={() => isAutoPlaying.current = false}
+          onMouseEnter={() => isAutoPlaying.current = false}
+          onMouseLeave={() => isAutoPlaying.current = true}
+          style={{
+            display: 'flex',
+            overflowX: 'auto',
+            scrollSnapType: 'x mandatory', 
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+            padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', 
+            gap: '2.5rem',
+            alignItems: 'center',
+          }}
+        >
+          <style>{`.testi-scroller::-webkit-scrollbar { display: none; }`}</style>
+
+          {reviews.map((review, i) => {
+            const isActive = activeIndex === i;
+            return (
+              <div data-index={i} key={review.id} style={{
+                flex: '0 0 auto',
+                width: 'clamp(300px, 75vw, 760px)',
+                scrollSnapAlign: 'center',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                textAlign: 'center',
+                background: 'white',
+                padding: 'clamp(2rem, 5vw, 3.5rem)',
+                borderRadius: '2rem',
+                boxShadow: isActive ? '0 12px 40px rgba(47,107,255,0.08)' : 'none',
+                opacity: isActive ? 1 : 0.35, 
+                transform: isActive ? 'scale(1)' : 'scale(0.92)',
+                transition: 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
               }}>
-                "{review.text}"
-              </p>
+                <p style={{
+                  fontFamily: 'Satoshi', 
+                  fontSize: 'clamp(1rem, 2vw, 1.25rem)', 
+                  fontWeight: 500,
+                  color: '#1A202C', 
+                  lineHeight: 1.7, 
+                  marginBottom: '2.5rem'
+                }}>
+                  "{review.text}"
+                </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem' }}>
-                <div style={{
-                  fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1.05rem', color: '#0D1117'
-                }}>
-                  {review.name}
-                </div>
-                <div style={{
-                  fontFamily: 'IBM Plex Mono', fontSize: '0.75rem', letterSpacing: '0.1em',
-                  textTransform: 'uppercase', color: '#2F6BFF', fontWeight: 600
-                }}>
-                  {review.title}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem' }}>
+                  <div style={{
+                    fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1.05rem', color: '#0D1117'
+                  }}>
+                    {review.name}
+                  </div>
+                  <div style={{
+                    fontFamily: 'IBM Plex Mono', fontSize: '0.75rem', letterSpacing: '0.1em',
+                    textTransform: 'uppercase', color: '#2F6BFF', fontWeight: 600
+                  }}>
+                    {review.title}
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
 
       {/* Navigatie Dotjes */}
