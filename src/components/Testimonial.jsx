@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Quote, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -22,10 +22,17 @@ const allReviews = [
 
 export default function Testimonial() {
   const containerRef = useRef(null)
-  const scrollRef = useRef(null)
+  const trackRef = useRef(null)
+  
   const [reviews, setReviews] = useState([])
   const [activeIndex, setActiveIndex] = useState(0)
-  const isAutoPlaying = useRef(true) 
+  const [shift, setShift] = useState(0) // X-offset berekening voor perfect centeren
+
+  // Dragging states
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const startX = useRef(0)
+  const isAutoPlaying = useRef(true)
 
   // Randomize reviews on mount
   useEffect(() => {
@@ -37,67 +44,80 @@ export default function Testimonial() {
     if (reviews.length === 0) return
     const interval = setInterval(() => {
       if (!isAutoPlaying.current) return
-      const nextIndex = (activeIndex + 1) % reviews.length
-      scrollToCard(nextIndex)
+      setActiveIndex(prev => (prev === 0 ? 1 : 0))
     }, 7000)
     return () => clearInterval(interval)
-  }, [reviews, activeIndex])
+  }, [reviews])
 
-  const scrollToCard = useCallback((i) => {
-    if (!scrollRef.current) return
-    const el = scrollRef.current
-    const targetItem = el.children[i]
-    if (targetItem) {
-      const scrollPos = targetItem.offsetLeft - (el.offsetWidth / 2) + (targetItem.offsetWidth / 2)
-      el.scrollTo({ left: scrollPos, behavior: 'smooth' })
-    }
-  }, [])
-
-  const handleScroll = () => {
-    if (!scrollRef.current) return
-    const el = scrollRef.current
-    const scrollCenter = el.scrollLeft + (el.offsetWidth / 2)
-    let closestIndex = 0
-    let minDiff = Infinity
-
-    Array.from(el.children).forEach((child, i) => {
-      const childCenter = child.offsetLeft + (child.offsetWidth / 2)
-      const diff = Math.abs(childCenter - scrollCenter)
-      if (diff < minDiff) { 
-        minDiff = diff
-        closestIndex = i 
+  // Bereken de pixel shift om de kaarten feilloos in het midden te zetten
+  useEffect(() => {
+    const calc = () => {
+      if (!trackRef.current) return
+      const card = trackRef.current.children[0]
+      if (card) {
+        const gap = 40 // 2.5rem
+        setShift((card.offsetWidth + gap) / 2)
       }
-    })
-
-    if (closestIndex !== activeIndex) {
-      setActiveIndex(closestIndex)
     }
-  }
+    // Calculate op init en window resize
+    const timer = setTimeout(calc, 100) // Wacht even op DOM painting
+    window.addEventListener('resize', calc)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', calc)
+    }
+  }, [reviews])
 
-  // Scroll animations voor de hele sectie
+  // Scroll animations voor de sectie
   useEffect(() => {
     if (reviews.length === 0) return
-    
     const ctx = gsap.context(() => {
       gsap.from('.testi-item', {
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 80%',
-        },
-        y: 30, opacity: 0, duration: 0.9, stagger: 0.12,
-        ease: 'power3.out'
+        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
+        y: 30, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out'
       })
     }, containerRef)
     return () => ctx.revert()
   }, [reviews])
+
+  // Dragging handlers (universeel voor muis + touch)
+  const onPointerDown = (e) => {
+    setIsDragging(true)
+    isAutoPlaying.current = false
+    startX.current = e.clientX || (e.touches && e.touches[0].clientX)
+  }
+
+  const onPointerMove = (e) => {
+    if (!isDragging) return
+    const x = e.clientX || (e.touches && e.touches[0].clientX)
+    setDragOffset(x - startX.current)
+  }
+
+  const onPointerUp = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+    isAutoPlaying.current = true
+
+    if (dragOffset > 60) {
+      // Swiped right -> go prev
+      setActiveIndex(0)
+    } else if (dragOffset < -60) {
+      // Swiped left -> go next
+      setActiveIndex(1)
+    }
+    setDragOffset(0)
+  }
+
+  // De uiteindelijke CSS transform animatie
+  const basePosition = activeIndex === 0 ? shift : -shift
+  const trackTransform = `translate3d(${basePosition + dragOffset}px, 0, 0)`
 
   return (
     <section ref={containerRef} style={{
       padding: '5rem 0 3rem 0',
       background: '#F6F8FB',
       position: 'relative', overflow: 'hidden',
-      width: '100vw',
-      marginLeft: 'calc(-50vw + 50%)', // Garandeert full bleed achtergrond als parent een wrapper is
+      width: '100vw', marginLeft: 'calc(-50vw + 50%)', 
     }}>
       <div className="testi-item" style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
@@ -112,11 +132,11 @@ export default function Testimonial() {
 
       <div style={{ position: 'relative' }}>
         
-        {/* On-screen Controls voor muisgebruikers */}
+        {/* On-screen Controls (altijd klikbaar) */}
         <button 
-          onClick={() => { isAutoPlaying.current = false; scrollToCard(Math.max(activeIndex - 1, 0)) }}
+          onClick={() => { isAutoPlaying.current = false; setActiveIndex(0) }}
           style={{
-            position: 'absolute', left: 'max(2rem, calc(50vw - 420px))', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
+            position: 'absolute', left: 'max(1rem, calc(50vw - 420px))', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
             background: 'white', border: '1px solid rgba(47,107,255,0.1)', borderRadius: '50%', width: '48px', height: '48px',
             display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2F6BFF', cursor: 'pointer',
             boxShadow: '0 4px 15px rgba(0,0,0,0.05)', opacity: activeIndex === 0 ? 0.3 : 1, pointerEvents: activeIndex === 0 ? 'none' : 'auto',
@@ -128,12 +148,12 @@ export default function Testimonial() {
         </button>
 
         <button 
-          onClick={() => { isAutoPlaying.current = false; scrollToCard(Math.min(activeIndex + 1, reviews.length - 1)) }}
+          onClick={() => { isAutoPlaying.current = false; setActiveIndex(1) }}
           style={{
-            position: 'absolute', right: 'max(2rem, calc(50vw - 420px))', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
+            position: 'absolute', right: 'max(1rem, calc(50vw - 420px))', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
             background: 'white', border: '1px solid rgba(47,107,255,0.1)', borderRadius: '50%', width: '48px', height: '48px',
             display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2F6BFF', cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.05)', opacity: activeIndex === reviews.length - 1 ? 0.3 : 1, pointerEvents: activeIndex === reviews.length - 1 ? 'none' : 'auto',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.05)', opacity: activeIndex === 1 ? 0.3 : 1, pointerEvents: activeIndex === 1 ? 'none' : 'auto',
             transition: 'all 0.3s ease'
           }}
           aria-label="Volgende review"
@@ -141,91 +161,91 @@ export default function Testimonial() {
           <ChevronRight size={24} />
         </button>
 
+        {/* 100% Custom Bug-vrij Drag & Translate track (GEEN native overflow bugs meer!) */}
         <div 
-          ref={scrollRef}
-          className="testi-item testi-scroller" 
-          onTouchStart={() => isAutoPlaying.current = false}
-          onMouseEnter={() => isAutoPlaying.current = false}
-          onMouseLeave={() => isAutoPlaying.current = true}
-          onScroll={handleScroll}
+          className="testi-item"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerLeave={onPointerUp}
+          onTouchStart={onPointerDown}
+          onTouchMove={onPointerMove}
+          onTouchEnd={onPointerUp}
           style={{
             display: 'flex',
-            overflowX: 'auto',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-            padding: '2rem calc(50vw - clamp(150px, 37.5vw, 380px))', 
-            gap: '2.5rem',
+            justifyContent: 'center',
             alignItems: 'center',
+            width: '100%',
+            touchAction: 'pan-y', // Voorkom dat mobiel vastloopt als mensen verticaal willen scrollen
+            cursor: isDragging ? 'grabbing' : 'grab',
+            userSelect: 'none',
           }}
         >
-          <style>{`
-            .testi-scroller::-webkit-scrollbar { display: none; }
-            /* Zorg ervoor dat smartphones en tablets perfect snappen voor de beste swipe-ervaring, we blokkeren native snap op desktops om Safari scroll conflicts te voorkomen */
-            @media (pointer: coarse) {
-              .testi-scroller { scroll-snap-type: x mandatory; }
-            }
-          `}</style>
-
-          {reviews.map((review, i) => {
-            const isActive = activeIndex === i;
-            return (
-              <div data-index={i} key={review.id} style={{
-                flex: '0 0 auto',
-                width: 'clamp(300px, 75vw, 760px)',
-                scrollSnapAlign: 'center',
-                display: 'flex', flexDirection: 'column', alignItems: 'center',
-                textAlign: 'center',
-                background: 'white',
-                padding: 'clamp(2rem, 5vw, 3.5rem)',
-                borderRadius: '2rem',
-                boxShadow: isActive ? '0 12px 40px rgba(47,107,255,0.08)' : 'none',
-                opacity: isActive ? 1 : 0.35, 
-                transform: isActive ? 'scale(1)' : 'scale(0.92)',
-                transition: 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
-              }}>
-                <p style={{
-                  fontFamily: 'Satoshi', 
-                  fontSize: 'clamp(1rem, 2vw, 1.25rem)', 
-                  fontWeight: 500,
-                  color: '#1A202C', 
-                  lineHeight: 1.7, 
-                  marginBottom: '2.5rem'
+          <div 
+            ref={trackRef}
+            style={{
+              display: 'flex',
+              gap: '40px', // 2.5rem
+              transform: trackTransform,
+              transition: isDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+            }}
+          >
+            {reviews.map((review, i) => {
+              const isActive = activeIndex === i;
+              return (
+                <div key={review.id} style={{
+                  flex: '0 0 auto',
+                  width: 'clamp(280px, 75vw, 760px)',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  textAlign: 'center',
+                  background: 'white',
+                  padding: 'clamp(1.5rem, 4vw, 3.5rem)',
+                  borderRadius: '2rem',
+                  boxShadow: isActive ? '0 12px 40px rgba(47,107,255,0.08)' : 'none',
+                  opacity: isActive ? 1 : 0.35, 
+                  transform: isActive ? 'scale(1)' : 'scale(0.92)',
+                  transition: isDragging ? 'none' : 'all 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
                 }}>
-                  "{review.text}"
-                </p>
+                  <p style={{
+                    fontFamily: 'Satoshi', 
+                    fontSize: 'clamp(1rem, 2vw, 1.25rem)', 
+                    fontWeight: 500,
+                    color: '#1A202C', 
+                    lineHeight: 1.7, 
+                    marginBottom: '2.5rem'
+                  }}>
+                    "{review.text}"
+                  </p>
 
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem' }}>
-                  <div style={{
-                    fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1.05rem', color: '#0D1117'
-                  }}>
-                    {review.name}
-                  </div>
-                  <div style={{
-                    fontFamily: 'IBM Plex Mono', fontSize: '0.75rem', letterSpacing: '0.1em',
-                    textTransform: 'uppercase', color: '#2F6BFF', fontWeight: 600
-                  }}>
-                    {review.title}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem' }}>
+                    <div style={{
+                      fontFamily: 'Satoshi', fontWeight: 700, fontSize: '1.05rem', color: '#0D1117'
+                    }}>
+                      {review.name}
+                    </div>
+                    <div style={{
+                      fontFamily: 'IBM Plex Mono', fontSize: '0.75rem', letterSpacing: '0.1em',
+                      textTransform: 'uppercase', color: '#2F6BFF', fontWeight: 600
+                    }}>
+                      {review.title}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
       </div>
 
       {/* Navigatie Dotjes */}
       {reviews.length > 1 && (
         <div className="testi-item" style={{
-          display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '2rem', marginBottom: '2.5rem'
+          display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '2.5rem', marginBottom: '2.5rem'
         }}>
           {reviews.map((_, i) => (
             <button
               key={i}
-              onClick={() => {
-                isAutoPlaying.current = false;
-                scrollToCard(i);
-              }}
+              onClick={() => { isAutoPlaying.current = false; setActiveIndex(i) }}
               style={{
                 width: activeIndex === i ? '24px' : '8px',
                 height: '8px',
@@ -241,6 +261,7 @@ export default function Testimonial() {
         </div>
       )}
 
+      {/* Bekijk meer aanbevelingen */}
       <div className="testi-item" style={{ textAlign: 'center' }}>
         <a
           href="https://www.linkedin.com/in/nick-van-kampen/details/recommendations/"
