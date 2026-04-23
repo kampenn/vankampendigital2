@@ -53,27 +53,26 @@ export default function Testimonial() {
     }
   }, [])
 
-  // Gebruik IntersectionObserver voor foutloze en high-performance detectie van de actieve card
-  useEffect(() => {
-    if (!scrollRef.current || reviews.length === 0) return
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setActiveIndex(Number(entry.target.dataset.index))
-        }
-      })
-    }, { root: scrollRef.current, threshold: 0.6 })
+  const handleScroll = () => {
+    if (!scrollRef.current) return
+    const el = scrollRef.current
+    const scrollCenter = el.scrollLeft + (el.offsetWidth / 2)
+    let closestIndex = 0
+    let minDiff = Infinity
 
-    const children = scrollRef.current.children
-    Array.from(children).forEach(child => {
-      // Observeer alleen de review cards (die data-index hebben)
-      if (child.hasAttribute('data-index')) {
-        observer.observe(child)
+    Array.from(el.children).forEach((child, i) => {
+      const childCenter = child.offsetLeft + (child.offsetWidth / 2)
+      const diff = Math.abs(childCenter - scrollCenter)
+      if (diff < minDiff) { 
+        minDiff = diff
+        closestIndex = i 
       }
     })
 
-    return () => observer.disconnect()
-  }, [reviews])
+    if (closestIndex !== activeIndex) {
+      setActiveIndex(closestIndex)
+    }
+  }
 
   // Scroll animations voor de hele sectie
   useEffect(() => {
@@ -148,10 +147,10 @@ export default function Testimonial() {
           onTouchStart={() => isAutoPlaying.current = false}
           onMouseEnter={() => isAutoPlaying.current = false}
           onMouseLeave={() => isAutoPlaying.current = true}
+          onScroll={handleScroll}
           style={{
             display: 'flex',
             overflowX: 'auto',
-            scrollSnapType: 'x mandatory', 
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
@@ -160,7 +159,13 @@ export default function Testimonial() {
             alignItems: 'center',
           }}
         >
-          <style>{`.testi-scroller::-webkit-scrollbar { display: none; }`}</style>
+          <style>{`
+            .testi-scroller::-webkit-scrollbar { display: none; }
+            /* Zorg ervoor dat smartphones en tablets perfect snappen voor de beste swipe-ervaring, we blokkeren native snap op desktops om Safari scroll conflicts te voorkomen */
+            @media (pointer: coarse) {
+              .testi-scroller { scroll-snap-type: x mandatory; }
+            }
+          `}</style>
 
           {reviews.map((review, i) => {
             const isActive = activeIndex === i;
