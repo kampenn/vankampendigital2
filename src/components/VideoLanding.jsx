@@ -1,48 +1,108 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { ChevronDown } from 'lucide-react'
 
 export default function VideoLanding() {
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.matchMedia('(max-width: 1100px)').matches : false
-  )
+  const desktopRef = useRef(null)
+  const mobileRef = useRef(null)
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 1100px)').matches)
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    let interactionHandled = false;
+
+    const attemptPlay = () => {
+      const vids = [desktopRef.current, mobileRef.current];
+      vids.forEach(v => {
+        if (v) {
+          // Force mutated properties directly on DOM elements for Safari
+          v.defaultMuted = true;
+          v.muted = true;
+          v.playsInline = true;
+          
+          const playPromise = v.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(e => {
+              // Ignore rejection, rely on the interaction fallback
+              console.log('Autoplay temporarily blocked by browser:', e.message);
+            });
+          }
+        }
+      });
+    };
+
+    // 1. Eerste poging direct bij laden
+    attemptPlay();
+
+    // 2. The "Double Barrage" Fallback: Activeer op éérste interactie
+    const handleInteraction = () => {
+      if (interactionHandled) return;
+      interactionHandled = true;
+      
+      attemptPlay();
+      
+      // Verwijder listeners nadat ze 1x zijn afgevuurd
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('scroll', handleInteraction);
+      window.removeEventListener('mousemove', handleInteraction);
+    };
+
+    window.addEventListener('touchstart', handleInteraction, { passive: true });
+    window.addEventListener('click', handleInteraction, { passive: true });
+    window.addEventListener('scroll', handleInteraction, { passive: true });
+    window.addEventListener('mousemove', handleInteraction, { once: true, passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('scroll', handleInteraction);
+      window.removeEventListener('mousemove', handleInteraction);
+    }
   }, [])
-
-  const desktopVideoHTML = `
-    <video
-      src="/digitallandscapev3.mp4"
-      autoplay
-      playsinline
-      muted
-      preload="auto"
-      style="width: 100%; max-width: 1600px; height: 100%; object-fit: contain; background-color: transparent; transform: scale(1.015); display: block;"
-    ></video>
-  `;
-
-  const mobileVideoHTML = `
-    <video
-      src="/digitalportret.mp4"
-      autoplay
-      playsinline
-      muted
-      preload="auto"
-      style="width: 100%; max-width: 1600px; height: 100%; object-fit: contain; background-color: transparent; transform: scale(1.015); display: block;"
-    ></video>
-  `;
 
   return (
     <section style={{ 
       width: '100%', height: '100dvh', position: 'relative', overflow: 'hidden', 
       background: '#FFFFFF', display: 'flex', justifyContent: 'center', alignItems: 'center' 
     }}>
-      {/* Container for raw HTML video injection to bypass React/Safari autoplay quirks */}
-      <div 
-        style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-        dangerouslySetInnerHTML={{ __html: isMobile ? mobileVideoHTML : desktopVideoHTML }}
+      <style>
+        {`
+          .landing-video {
+            width: 100%;
+            max-width: 1600px;
+            height: 100%;
+            object-fit: contain;
+            background-color: transparent;
+            transform: scale(1.015);
+          }
+          .desktop-video { display: block; }
+          .mobile-video { display: none; }
+          
+          @media (max-width: 1100px) {
+            .desktop-video { display: none; }
+            .mobile-video { display: block; }
+          }
+        `}
+      </style>
+
+      {/* Desktop Video (statisch in de DOM) */}
+      <video
+        ref={desktopRef}
+        className="landing-video desktop-video"
+        src="/digitallandscapev3.mp4"
+        autoPlay
+        playsInline
+        muted
+        preload="auto"
+      />
+
+      {/* Mobile Video (statisch in de DOM) */}
+      <video
+        ref={mobileRef}
+        className="landing-video mobile-video"
+        src="/digitalportret.mp4"
+        autoPlay
+        playsInline
+        muted
+        preload="auto"
       />
 
       {/* Scroll hint bouncing */}
