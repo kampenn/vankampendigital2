@@ -1,57 +1,48 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 
 export default function VideoLanding() {
-  const [isMobile, setIsMobile] = useState(false)
-  const desktopRef = useRef(null)
-  const mobileRef = useRef(null)
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 1100px)').matches : false
+  )
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 1100px)').matches)
-    checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  useEffect(() => {
-    // Force native browser play
-    if (desktopRef.current && !isMobile) desktopRef.current.play().catch(e => console.log(e))
-    if (mobileRef.current && isMobile) mobileRef.current.play().catch(e => console.log(e))
-  }, [isMobile])
+  const desktopVideoHTML = `
+    <video
+      src="/digitallandscapev3.mp4"
+      autoplay
+      playsinline
+      muted
+      preload="auto"
+      style="width: 100%; max-width: 1600px; height: 100%; object-fit: contain; background-color: transparent; transform: scale(1.015); display: block;"
+    ></video>
+  `;
+
+  const mobileVideoHTML = `
+    <video
+      src="/digitalportret.mp4"
+      autoplay
+      playsinline
+      muted
+      preload="auto"
+      style="width: 100%; max-width: 1600px; height: 100%; object-fit: contain; background-color: transparent; transform: scale(1.015); display: block;"
+    ></video>
+  `;
 
   return (
     <section style={{ 
       width: '100%', height: '100dvh', position: 'relative', overflow: 'hidden', 
       background: '#FFFFFF', display: 'flex', justifyContent: 'center', alignItems: 'center' 
     }}>
-      {/* Desktop Video */}
-      <video
-        ref={desktopRef}
-        src="/digitallandscapev3.mp4"
-        autoPlay
-        playsInline
-        muted
-        style={{
-          width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
-          backgroundColor: 'transparent',
-          transform: 'scale(1.015)',
-          display: isMobile ? 'none' : 'block',
-        }}
-      />
-
-      {/* Mobile Video */}
-      <video
-        ref={mobileRef}
-        src="/digitalportret.mp4"
-        autoPlay
-        playsInline
-        muted
-        style={{
-          width: '100%', maxWidth: '1600px', height: '100%', objectFit: 'contain',
-          backgroundColor: 'transparent',
-          transform: 'scale(1.015)',
-          display: isMobile ? 'block' : 'none',
-        }}
+      {/* Container for raw HTML video injection to bypass React/Safari autoplay quirks */}
+      <div 
+        style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        dangerouslySetInnerHTML={{ __html: isMobile ? mobileVideoHTML : desktopVideoHTML }}
       />
 
       {/* Scroll hint bouncing */}

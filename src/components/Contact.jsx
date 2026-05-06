@@ -1,16 +1,18 @@
 import { useState } from 'react'
-import { ArrowRight, Loader2, Check } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export default function Contact() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [contactType, setContactType] = useState('Meer informatie')
+  const [phone, setPhone] = useState('')
+  const [remarks, setRemarks] = useState('')
   const [botcheck, setBotcheck] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!email || isSubmitting) return
+    if (!email || !name || isSubmitting) return
 
     setIsSubmitting(true)
 
@@ -32,11 +34,12 @@ export default function Contact() {
         },
         body: JSON.stringify({
           access_key: accessKey,
+          name: name,
           email: email,
+          phone: phone,
+          message: remarks,
           botcheck: botcheck,
-          keuze: contactType,
-          subject: `Nieuwe aanvraag via website — VAN KAMPEN Digital: ${contactType}`,
-          message: `Nieuw e-mailadres achtergelaten op de website: ${email}\n\nGekozen onderwerp: ${contactType}`,
+          subject: `Nieuwe aanvraag via website — VAN KAMPEN Digital`,
           from_name: "VAN KAMPEN Digital",
         }),
       })
@@ -54,6 +57,14 @@ export default function Contact() {
   }
 
   const gradText = { background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }
+
+  const inputStyle = {
+    width: '100%', padding: '1rem 1.25rem', borderRadius: '16px',
+    border: '1px solid rgba(47,107,255,0.25)',
+    background: 'rgba(255,255,255,0.05)', color: 'white',
+    fontFamily: 'Satoshi', fontSize: '0.95rem', outline: 'none',
+    transition: 'border-color 0.2s ease',
+  }
 
   return (
     <section id="contact" style={{ padding: '7rem 1.5rem', background: '#F6F8FB' }}>
@@ -75,32 +86,12 @@ export default function Contact() {
           Laten we <span style={gradText}>kennismaken</span>
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.45)', marginBottom: '1.5rem', lineHeight: 1.75 }}>
-          Geef direct aan waar u interesse in heeft en laat uw e-mailadres achter. Wij nemen zo snel mogelijk contact met u op.
+          Vul uw gegevens in en wij nemen zo snel mogelijk contact met u op.
         </p>
 
         {!submitted ? (
-          <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             
-            <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
-              {['Vrijblijvend gesprek', 'Bedrijfsscan', 'Meer informatie'].map(item => (
-                <button 
-                  key={item} 
-                  type="button" 
-                  onClick={() => setContactType(item)}
-                  style={{
-                    fontFamily: 'Satoshi', fontSize: '0.8rem', fontWeight: 600,
-                    padding: '0.5rem 1rem', borderRadius: '100px', cursor: 'pointer',
-                    background: contactType === item ? 'linear-gradient(135deg,#2F6BFF,#7C5CFF)' : 'rgba(255,255,255,0.05)',
-                    border: `1px solid ${contactType === item ? 'transparent' : 'rgba(47,107,255,0.3)'}`,
-                    color: 'white',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
             {/* Honeypot field om spam bots af te weren */}
             <input 
               type="checkbox" 
@@ -109,37 +100,62 @@ export default function Contact() {
               style={{ display: 'none' }} 
               onChange={e => setBotcheck(e.target.checked)} 
             />
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <input
-                id="contact-input"
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="naam@bedrijf.nl"
-                required
-                style={{
-                  flex: 1, padding: '1rem 1.25rem', borderRadius: '100px',
-                  border: '1px solid rgba(47,107,255,0.25)',
-                  background: 'rgba(255,255,255,0.05)', color: 'white',
-                  fontFamily: 'Satoshi', fontSize: '0.95rem', outline: 'none',
-                  transition: 'border-color 0.2s ease',
-                }}
-                onFocus={e => e.target.style.borderColor = '#2F6BFF'}
-                onBlur={e => e.target.style.borderColor = 'rgba(47,107,255,0.25)'}
-              />
-              <button id="contact-submit" type="submit" aria-label="Verstuur e-mailadres voor inzicht" style={{
-                padding: '1rem 1.75rem', borderRadius: '100px', flexShrink: 0,
-                background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', color: 'white',
-                border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
-                boxShadow: '0 4px 20px rgba(47,107,255,0.4)',
-                transition: 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.3s ease',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(47,107,255,0.55)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(47,107,255,0.4)' }}
-              >
-                <ArrowRight size={18} />
-              </button>
-            </div>
+
+            <input
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Uw naam"
+              required
+              style={inputStyle}
+              onFocus={e => e.target.style.borderColor = '#2F6BFF'}
+              onBlur={e => e.target.style.borderColor = 'rgba(47,107,255,0.25)'}
+            />
+
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="E-mailadres"
+              required
+              style={inputStyle}
+              onFocus={e => e.target.style.borderColor = '#2F6BFF'}
+              onBlur={e => e.target.style.borderColor = 'rgba(47,107,255,0.25)'}
+            />
+
+            <input
+              type="tel"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              placeholder="Telefoonnummer"
+              style={inputStyle}
+              onFocus={e => e.target.style.borderColor = '#2F6BFF'}
+              onBlur={e => e.target.style.borderColor = 'rgba(47,107,255,0.25)'}
+            />
+
+            <textarea
+              value={remarks}
+              onChange={e => setRemarks(e.target.value)}
+              placeholder="Opmerkingen"
+              rows={4}
+              style={{ ...inputStyle, resize: 'vertical' }}
+              onFocus={e => e.target.style.borderColor = '#2F6BFF'}
+              onBlur={e => e.target.style.borderColor = 'rgba(47,107,255,0.25)'}
+            />
+
+            <button type="submit" aria-label="Verstuur aanvraag" style={{
+              padding: '1rem 1.75rem', borderRadius: '16px', marginTop: '0.5rem',
+              background: 'linear-gradient(135deg,#2F6BFF,#7C5CFF)', color: 'white',
+              border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+              boxShadow: '0 4px 20px rgba(47,107,255,0.4)', fontWeight: 600, fontSize: '1rem', fontFamily: 'Satoshi',
+              transition: 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.3s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(47,107,255,0.55)' }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(47,107,255,0.4)' }}
+            >
+              {isSubmitting ? 'Versturen...' : 'Verstuur aanvraag'}
+              {!isSubmitting && <ArrowRight size={18} />}
+            </button>
           </form>
         ) : (
           <div style={{
