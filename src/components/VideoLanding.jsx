@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 
 export function useAutoplay() {
@@ -37,8 +37,15 @@ export function useAutoplay() {
 }
 
 export default function VideoLanding() {
-  const desktopRef = useAutoplay();
-  const mobileRef = useAutoplay();
+  const [isMobile, setIsMobile] = useState(false);
+  const videoRef = useAutoplay();
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 1100);
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <section style={{ 
@@ -65,23 +72,12 @@ export default function VideoLanding() {
         `}
       </style>
 
-      {/* Desktop Video (statisch in de DOM) */}
+      {/* Render slechts één video tegelijk om Safari's strict autoplay beleid (meerdere video's) niet te triggeren */}
       <video
-        ref={desktopRef}
-        className="landing-video desktop-video"
-        src="/digitallandscapev3.mp4"
-        autoPlay
-        muted
-        playsInline
-        loop
-        preload="auto"
-      />
-
-      {/* Mobile Video (statisch in de DOM) */}
-      <video
-        ref={mobileRef}
-        className="landing-video mobile-video"
-        src="/digitalportret.mp4"
+        ref={videoRef}
+        key={isMobile ? 'mobile' : 'desktop'}
+        className="landing-video"
+        src={isMobile ? "/digitalportret.mp4" : "/digitallandscapev3.mp4"}
         autoPlay
         muted
         playsInline
