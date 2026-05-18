@@ -102,10 +102,13 @@ export default function Contact() {
             />
 
             <input
+              id="contact-name"
               type="text"
+              name="name"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Uw naam"
+              aria-label="Uw naam"
               required
               style={inputStyle}
               onFocus={e => e.target.style.borderColor = '#2F6BFF'}
@@ -113,10 +116,13 @@ export default function Contact() {
             />
 
             <input
+              id="contact-email"
               type="email"
+              name="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="E-mailadres"
+              aria-label="E-mailadres"
               required
               style={inputStyle}
               onFocus={e => e.target.style.borderColor = '#2F6BFF'}
@@ -124,19 +130,25 @@ export default function Contact() {
             />
 
             <input
+              id="contact-phone"
               type="tel"
+              name="phone"
               value={phone}
               onChange={e => setPhone(e.target.value)}
               placeholder="Telefoonnummer"
+              aria-label="Telefoonnummer"
               style={inputStyle}
               onFocus={e => e.target.style.borderColor = '#2F6BFF'}
               onBlur={e => e.target.style.borderColor = 'rgba(47,107,255,0.25)'}
             />
 
             <textarea
+              id="contact-remarks"
+              name="remarks"
               value={remarks}
               onChange={e => setRemarks(e.target.value)}
               placeholder="Opmerkingen"
+              aria-label="Opmerkingen"
               rows={4}
               style={{ ...inputStyle, resize: 'vertical' }}
               onFocus={e => e.target.style.borderColor = '#2F6BFF'}

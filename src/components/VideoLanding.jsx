@@ -1,62 +1,44 @@
 import { useEffect, useRef } from 'react'
 import { ChevronDown } from 'lucide-react'
 
-export default function VideoLanding() {
-  const desktopRef = useRef(null)
-  const mobileRef = useRef(null)
+export function useAutoplay() {
+  const ref = useRef(null);
 
   useEffect(() => {
-    let interactionHandled = false;
+    const video = ref.current;
+    if (!video) return;
 
-    const attemptPlay = () => {
-      const vids = [desktopRef.current, mobileRef.current];
-      vids.forEach(v => {
-        if (v) {
-          // Force mutated properties directly on DOM elements for Safari
-          v.defaultMuted = true;
-          v.muted = true;
-          v.playsInline = true;
-          
-          const playPromise = v.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(e => {
-              // Ignore rejection, rely on the interaction fallback
-              console.log('Autoplay temporarily blocked by browser:', e.message);
-            });
-          }
-        }
-      });
+    video.muted = true;            // dubbel-check, Safari is streng
+    video.setAttribute("playsinline", "");
+
+    const tryPlay = () => {
+      const p = video.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          // Safari blokkeerde alsnog → start bij eerste user interaction
+          const resume = () => {
+            video.play().catch(() => {});
+            window.removeEventListener("touchstart", resume);
+            window.removeEventListener("click", resume);
+            window.removeEventListener("scroll", resume);
+          };
+          window.addEventListener("touchstart", resume, { once: true });
+          window.addEventListener("click", resume, { once: true });
+          window.addEventListener("scroll", resume, { once: true });
+        });
+      }
     };
 
-    // 1. Eerste poging direct bij laden
-    attemptPlay();
+    if (video.readyState >= 2) tryPlay();
+    else video.addEventListener("loadeddata", tryPlay, { once: true });
+  }, []);
 
-    // 2. The "Double Barrage" Fallback: Activeer op éérste interactie
-    const handleInteraction = () => {
-      if (interactionHandled) return;
-      interactionHandled = true;
-      
-      attemptPlay();
-      
-      // Verwijder listeners nadat ze 1x zijn afgevuurd
-      window.removeEventListener('touchstart', handleInteraction);
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('scroll', handleInteraction);
-      window.removeEventListener('mousemove', handleInteraction);
-    };
+  return ref;
+}
 
-    window.addEventListener('touchstart', handleInteraction, { passive: true });
-    window.addEventListener('click', handleInteraction, { passive: true });
-    window.addEventListener('scroll', handleInteraction, { passive: true });
-    window.addEventListener('mousemove', handleInteraction, { once: true, passive: true });
-
-    return () => {
-      window.removeEventListener('touchstart', handleInteraction);
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('scroll', handleInteraction);
-      window.removeEventListener('mousemove', handleInteraction);
-    }
-  }, [])
+export default function VideoLanding() {
+  const desktopRef = useAutoplay();
+  const mobileRef = useAutoplay();
 
   return (
     <section style={{ 
@@ -89,8 +71,9 @@ export default function VideoLanding() {
         className="landing-video desktop-video"
         src="/digitallandscapev3.mp4"
         autoPlay
-        playsInline
         muted
+        playsInline
+        loop
         preload="auto"
       />
 
@@ -100,8 +83,9 @@ export default function VideoLanding() {
         className="landing-video mobile-video"
         src="/digitalportret.mp4"
         autoPlay
-        playsInline
         muted
+        playsInline
+        loop
         preload="auto"
       />
 
