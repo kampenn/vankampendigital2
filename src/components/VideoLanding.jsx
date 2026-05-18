@@ -38,12 +38,19 @@ export function useAutoplay() {
 
 export default function VideoLanding() {
   const [isMobile, setIsMobile] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   const videoRef = useAutoplay();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 1100);
     handleResize(); // Initial check
     window.addEventListener('resize', handleResize);
+    
+    // Detect Safari or iOS for fallback image
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    setUseFallback(isSafari || isIOS);
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -72,18 +79,27 @@ export default function VideoLanding() {
         `}
       </style>
 
-      {/* Render slechts één video tegelijk om Safari's strict autoplay beleid (meerdere video's) niet te triggeren */}
-      <video
-        ref={videoRef}
-        key={isMobile ? 'mobile' : 'desktop'}
-        className="landing-video"
-        src={isMobile ? "/digitalportret.mp4" : "/digitallandscapev3.mp4"}
-        autoPlay
-        muted
-        playsInline
-        loop
-        preload="auto"
-      />
+      {/* Render afbeelding als we Safari of iOS detecteren, anders de video */}
+      {useFallback ? (
+        <img
+          key={isMobile ? 'mobile-fallback' : 'desktop-fallback'}
+          className="landing-video"
+          src={isMobile ? "/digitalportret-fallback.jpg" : "/digitallandscape-fallback.jpg"}
+          alt="VAN KAMPEN Digital"
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          key={isMobile ? 'mobile' : 'desktop'}
+          className="landing-video"
+          src={isMobile ? "/digitalportret.mp4" : "/digitallandscapev3.mp4"}
+          autoPlay
+          muted
+          playsInline
+          loop
+          preload="auto"
+        />
+      )}
 
       {/* Scroll hint bouncing */}
       <div style={{
