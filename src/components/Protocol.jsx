@@ -114,7 +114,7 @@ export default function Protocol() {
   const cards = [
     {
       step: 'STAP 01 / 03', title: 'Analyseer & begrijp',
-      desc: 'We starten altijd met luisteren. In een persoonlijk gesprek brengen we uw processen, tools en uitdagingen in kaart \u2014 ondersteund door data en AI.',
+      desc: 'We starten altijd met luisteren. In een persoonlijk gesprek brengen we uw processen, tools en uitdagingen in kaart, ondersteund door data en AI.',
       bg: 'linear-gradient(140deg,#0D1117 0%,#131729 100%)', Visual: RotatingGeometry,
     },
     {
