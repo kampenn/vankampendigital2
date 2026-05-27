@@ -39,7 +39,7 @@ export default function Contact() {
           phone: phone,
           message: remarks,
           botcheck: botcheck,
-          subject: `Nieuwe aanvraag via website — VAN KAMPEN Digital`,
+          subject: `Nieuwe aanvraag via website Van Kampen Digital`,
           from_name: "VAN KAMPEN Digital",
         }),
       })

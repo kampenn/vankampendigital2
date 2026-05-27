@@ -15,7 +15,7 @@ const allReviews = [
   {
     id: 2,
     name: 'Martijn Korving',
-    title: 'Scrum Master / Agile coach — DUO',
+    title: 'Scrum Master / Agile coach bij DUO',
     text: "Ik heb met Nick mogen samenwerken bij DUO. Hij kwam terecht in een dynamisch team met veel unieke persoonlijkheden. We ontwikkelden complexe processen die Nick snel wist te doorgronden. Daardoor was hij in staat om heldere ontwerpen te maken waar ontwikkelaars en testers goed mee uit de voeten konden. Daarnaast nam Nick de regie binnen het team en pakte hij ook de Scrum Master-rol op. Hij verdiende respect met de kwaliteit van zijn werk en wist het team dezelfde kant op te krijgen. Hierdoor werden flinke stappen gezet en is het project uiteindelijk eerder afgerond dan oorspronkelijk begroot. Kortom: de juiste man op de juiste plek."
   }
 ]

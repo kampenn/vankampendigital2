@@ -186,7 +186,7 @@ export default function Features() {
     {
       id: 'business-analyse', num: '01', label: 'Business analyse',
       title: 'Business analyse & optimalisatie',
-      desc: 'Wij brengen uw bedrijfsprocessen in kaart, identificeren knelpunten en vertalen die naar concrete verbeteringen. Van toolselectie tot implementatie — wij zorgen dat digitalisering echt iets oplevert.',
+      desc: 'Wij brengen uw bedrijfsprocessen in kaart, identificeren knelpunten en vertalen die naar concrete verbeteringen. Van toolselectie tot implementatie. Wij zorgen dat digitalisering echt iets oplevert.',
       tags: ['Procesoptimalisatie', 'Toolselectie', 'Kostenreductie'],
       content: <ShufflerCard />,
     },

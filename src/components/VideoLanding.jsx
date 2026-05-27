@@ -96,7 +96,6 @@ export default function VideoLanding() {
           autoPlay
           muted
           playsInline
-          loop
           preload="auto"
         />
       )}
